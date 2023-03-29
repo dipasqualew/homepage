@@ -13,6 +13,7 @@ const favourites = ref<Record<string, Favourite>>(FAVOURITES);
     <Flex direction="column">
       <BigCard v-bind="FAVOURITES.gmail" />
       <BigCard v-bind="FAVOURITES.gdrive" />
+      <BigCard v-bind="FAVOURITES.gcalendar" />
     </Flex>
     <BigCard v-bind="FAVOURITES.chatgpt" />
     <BigCard v-bind="FAVOURITES.onepassword" />

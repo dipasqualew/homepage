@@ -6,15 +6,20 @@ export interface Favourite {
 
 import img1Password from './assets/1password.webp'
 import imgChatgpt from './assets/chatgpt.webp'
+import imgGCalendar from './assets/gcalendar.png'
 import imgGdrive from './assets/gdrive.webp'
 import imgGmail from './assets/gmail.webp'
-
 
 export const FAVOURITES: Record<string, Favourite> = {
   chatgpt: {
     "title": "chatgpt",
-    "url": "https://chat.openai.com/chat",
+    "url": "https://chat.openai.com/chat?model=gpt-4",
     "icon": imgChatgpt
+  },
+  gcalendar: {
+    "title": "gcalendar",
+    "url": "https://calendar.google.com/calendar/u/0/r",
+    "icon": imgGCalendar,
   },
   gdrive: {
     "title": "gdrive",
