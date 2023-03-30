@@ -49,6 +49,6 @@ defineProps<Props>()
 }
 
 .big-card img {
-  max-width: 100px;
+  width: 100px;
 }
 </style>

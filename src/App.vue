@@ -1,22 +1,27 @@
 <script setup lang="ts">
-import BigCard from './components/BigCard.vue';
-import { ref } from 'vue';
-import { Favourite, FAVOURITES } from './favourites';
-import Flex from './components/Flex.vue';
 
+import { computed } from 'vue';
+import Renderer from './components/Renderer.vue';
+import NoLayout from './components/NoLayout.vue';
 
-const favourites = ref<Record<string, Favourite>>(FAVOURITES);
+const params = (new URL(document.location as unknown as URL)).searchParams;
+const query = params.get('layout') || "";
+
+console.log({ query })
+
+const layout = computed(() => {
+  try {
+    return JSON.parse(atob(query))
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+});
+
 </script>
 
 <template>
-  <Flex direction="row">
-    <Flex direction="column">
-      <BigCard v-bind="FAVOURITES.gmail" />
-      <BigCard v-bind="FAVOURITES.gdrive" />
-      <BigCard v-bind="FAVOURITES.gcalendar" />
-    </Flex>
-    <BigCard v-bind="FAVOURITES.chatgpt" />
-    <BigCard v-bind="FAVOURITES.onepassword" />
-  </Flex>
+  <Renderer v-if="layout" :layout="layout" />
+  <NoLayout v-else />
 </template>
 
