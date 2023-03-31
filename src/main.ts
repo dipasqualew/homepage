@@ -1,3 +1,4 @@
+import 'vuetify/styles';
 import { setupApp } from './app';
 import './assets/styles.css';
 

@@ -1,9 +1,13 @@
 import { StorageLike } from '@vueuse/core';
 import { App as VueApp, createApp } from 'vue';
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
 
 import AppRoot from './AppRoot.vue';
 import { storageKey } from './injectionKeys';
 import { router } from './router';
+
 
 /**
  * Dependencies to be passed
@@ -23,7 +27,13 @@ export interface AppDependencies {
 export const setupApp = (deps: AppDependencies): VueApp<Element> => {
     const app = createApp(AppRoot);
 
+    const vuetify = createVuetify({
+        components,
+        directives,
+    });
+
     app.use(router);
+    app.use(vuetify);
     app.provide(storageKey, deps.storage);
 
     return app;

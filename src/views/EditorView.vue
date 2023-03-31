@@ -2,11 +2,13 @@
 import { computed, inject, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { useMeta } from '../hooks';
 import { storageKey } from '../injectionKeys';
 import { Layout } from '../profiles';
-import { LayoutProfile, createProfile, getLayoutProfiles, saveProfile } from '../profiles';
+import { createProfile, saveProfile } from '../profiles';
 
 const layout = ref('');
+
 
 const parsed = computed(() => {
     try {
@@ -34,65 +36,38 @@ const commitProfile = () => {
     router.push({ name: 'Layout', params: { layout: profile.uuid } });
 };
 
-const allProfiles = computed(() => {
-    const layoutProfiles = getLayoutProfiles(storage);
-
-    const existingProfiles = Object.values(layoutProfiles.value).filter((item) => !!item) as LayoutProfile[];
-
-    return existingProfiles;
-});
+const meta = useMeta();
+meta.title.value = 'Create a new Layout Profile';
 
 </script>
 <template>
-    <div class="no-layout">
-        <h1>Create a Layout Profile</h1>
-        <div>
-            <div>
-                <input v-model="profileName" />
-            </div>
-        </div>
-        <div class="mt5 row">
-            <div>
-                <textarea id="no-layout-editor" v-model="layout" />
-            </div>
-            <div>
-                <pre v-if="parsed">{{ parsed }}</pre>
+    <v-container>
+        <v-row>
+            <v-col class="max-height-50">
+                <div>
+                    <v-text-field label="Profile Name" variant="outlined" v-model="profileName"></v-text-field>
+                    <v-textarea label="Label" variant="outlined" v-model="layout" id="no-layout-editor"></v-textarea>
+                </div>
+            </v-col>
+            <v-col class="max-height-50">
+                <pre v-if="parsed" class="max-height-50">{{ parsed }}</pre>
                 <pre v-else>Invalid layout</pre>
-            </div>
-        </div>
-        <div class="mt5">
-            <button :disabled="!parsed || !profileName" @click="commitProfile">Commit</button>
-        </div>
-        <div v-for="existingProfile in allProfiles" :key="existingProfile.uuid">
-            <RouterLink :to="{ name: 'Layout', params: { layout: existingProfile.uuid }}" >{{  existingProfile.name }}</RouterLink>
-        </div>
-    </div>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <v-btn :disabled="!parsed || !profileName" variant="tonal"   @click="commitProfile" color="indigo">
+                    Commit
+                </v-btn>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <style scoped>
-.no-layout {
-    margin: 50px auto;
-    width: 100%;
-    max-width: 1200px;
-}
-
-.row {
-    display: flex;
-}
-
-.row>div {
-    flex-grow: 1;
-    box-sizing: border-box;
-    padding: 15px;
-}
-
-.no-layout textarea {
-    width: 100%;
-    height: 100%;
-    min-height: 200px;
-}
-
 pre {
-    font-family: monospace;
+    max-height: 50vh;
+    overflow: auto;
+    font-size: 14px;
 }
 </style>

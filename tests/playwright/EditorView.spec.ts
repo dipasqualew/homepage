@@ -5,6 +5,17 @@ import { GOOD_LAYOUT, GOOD_LAYOUT_PARSED, PROFILE } from '../fixtures/layouts.js
 
 test.describe('Editor View', () => {
 
+    test('Sets the correct meta', async ({ page }) => {
+        const url = '/';
+
+        await page.goto(url);
+
+        const locator = page.locator('h1');
+
+        await expect(locator).toContainText('Create a new Layout Profile');
+
+    });
+
     test.describe('without stored profiles', () => {
         test('parses a valid layout and provides a navigation link', async ({ page }) => {
             const url = '/';
