@@ -1,22 +1,27 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 
 interface Props {
   title: string;
   url: string;
   icon: string;
+  disableLinks: boolean;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const component = computed(() => props.disableLinks ? 'div' : 'a');
 
 </script>
 
 <template>
-  <a class="big-card" :href="url">
+  <component :is="component" class="big-card" :href="url">
     <div class="big-card-content">
       <div><img :src="icon" /></div>
       <div class="label"><span>{{ title }}</span></div>
     </div>
-  </a>
+  </component>
 </template>
 
 <style scoped>
