@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BigCard from './BigCard.vue';
 import FlexContainer from './FlexContainer.vue';
-import { Favourite } from '../favourites';
+import { Favourite } from '../profiles';
 
 interface BigCardProp {
     block: 'big-card';

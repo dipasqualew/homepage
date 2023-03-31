@@ -1,26 +1,35 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 
 import ContainerRenderer from '../components/ContainerRenderer.vue';
-import NoLayout from '../components/NoLayout.vue';
+import { loadProfile, LayoutProfile } from '../profiles';
 
 const route = useRoute();
-const query = route.params.layout as string;
+const profileUuid = route.params.layout as string;
 
-const layout = computed(() => {
+const profile = ref<LayoutProfile | null>(null);
+
+onBeforeMount(() => {
     try {
-        return JSON.parse(atob(query));
+        profile.value = loadProfile(profileUuid, localStorage);
     } catch (error) {
-        console.log(error);
-        return null;
+        return;
     }
 });
 
 </script>
 
 <template>
-    <ContainerRenderer v-if="layout" :layout="layout" />
-    <NoLayout v-else />
+    <div class="fullpage" v-if="profile">
+        <div>Using profile: {{ profile.name }}</div>
+        <ContainerRenderer :layout="profile.layout" />
+    </div>
+    <div v-else>404</div>
 </template>
 
+<style scoped>
+.fullpage {
+    height: 100%;
+}
+</style>

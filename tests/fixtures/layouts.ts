@@ -57,3 +57,9 @@ export const GOOD_LAYOUT_PARSED = {
         }
     ]
 };
+
+export const PROFILE = {
+    uuid: 'b3c7ada7-dd26-4521-87f4-5fe5f6b11c46',
+    name: 'Default Profile',
+    layout: GOOD_LAYOUT_PARSED,
+};
