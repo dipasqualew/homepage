@@ -1,17 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import Layout from './views/Layout.vue';
+import LayoutView from './views/LayoutView.vue';
 
 export const routes = [
     {
         path: '/layout',
         name: 'EmptyLayout',
-        component: Layout,
+        component: LayoutView,
     },
     {
         path: '/layout/:layout',
         name: 'Layout',
-        component: Layout,
+        component: LayoutView,
     },
 ];
 

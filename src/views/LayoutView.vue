@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router';
 
-import Renderer from '../components/Renderer.vue';
+import ContainerRenderer from '../components/ContainerRenderer.vue';
 import NoLayout from '../components/NoLayout.vue';
 
-const route = useRoute()
+const route = useRoute();
 const query = route.params.layout as string;
 
 const layout = computed(() => {
     try {
-        return JSON.parse(atob(query))
+        return JSON.parse(atob(query));
     } catch (error) {
         console.log(error);
         return null;
@@ -20,7 +20,7 @@ const layout = computed(() => {
 </script>
 
 <template>
-    <Renderer v-if="layout" :layout="layout" />
+    <ContainerRenderer v-if="layout" :layout="layout" />
     <NoLayout v-else />
 </template>
 

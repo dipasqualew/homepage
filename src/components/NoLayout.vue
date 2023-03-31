@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
-const layout = ref("");
+const layout = ref('');
 
 const parsed = computed(() => {
     try {

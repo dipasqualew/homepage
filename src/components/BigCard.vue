@@ -6,7 +6,7 @@ interface Props {
   icon: string;
 }
 
-defineProps<Props>()
+defineProps<Props>();
 
 </script>
 

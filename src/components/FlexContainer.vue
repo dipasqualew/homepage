@@ -1,9 +1,9 @@
 <script setup lang="ts">
 interface Props {
-    direction: "column" | "row";
+    direction: 'column' | 'row';
 }
 
-defineProps<Props>()
+defineProps<Props>();
 
 
 </script>
