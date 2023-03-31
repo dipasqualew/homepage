@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:playwright": "playwright test --project chromium",
+    "test:playwright:ui": "playwright test --ui",
+    "test:playwright:report": "playwright test show-report"
   },
   "dependencies": {
     "vue": "^3.2.47"

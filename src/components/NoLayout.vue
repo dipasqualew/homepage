@@ -11,7 +11,7 @@ const parsed = computed(() => {
     }
 });
 
-const destination = computed(() => `/homepage/?layout=${layout.value}`);
+const destination = computed(() => `/?layout=${layout.value}`);
 
 </script>
 <template>
@@ -21,7 +21,7 @@ const destination = computed(() => `/homepage/?layout=${layout.value}`);
         </div>
         <div class="mt5 row">
             <div>
-                <textarea v-model="layout" />
+                <textarea id="no-layout-editor" v-model="layout" />
             </div>
             <div>
                 <pre v-if="parsed">{{ parsed }}</pre>

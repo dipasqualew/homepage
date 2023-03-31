@@ -29,7 +29,6 @@ jobs:
       - name: Pull Vercel Environment Information
         run: bun x vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
-
       - name: Build Project Artifacts
         run: bun x vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
@@ -38,41 +37,13 @@ jobs:
         run: |
           bun x vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > vercel-domain.txt
           echo "VERCEL_DEPLOYMENT_URL=$(cat vercel-domain.txt)" >> $GITHUB_OUTPUT
-
-      # - name: Install playwright
-      #   run: bun x playwright install --with-deps
-
-      # - name: Run Playwright tests
-      #   run: bun x playwright test
-      #   env:
-      #     PLAYWRIGHT_BASE_URL: ${{ steps.deploy-preview.outputs.VERCEL_DEPLOYMENT_URL }}
-
-      # - uses: actions/upload-artifact@v3
-      #   if: always()
-      #   with:
-      #     name: playwright-report
-      #     path: playwright-report/
-      #     retention-days: 30
-
-      - name: Store Playwright's Version
-        run: |
-          PLAYWRIGHT_VERSION=$(bun pm ls @playwright/test | grep @playwright | sed 's/.*@//')
-          echo "Playwright's Version: $PLAYWRIGHT_VERSION"
-          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
-
-      - name: Cache Playwright Browsers for Playwright's Version
-        id: cache-playwright-browsers
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}
+          echo "Preview URL: $(cat vercel-domain.txt)" >> $GITHUB_STEP_SUMMARY
 
       - name: Setup Playwright
-        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
-        run: bun x playwright test
+        run: bun run test:playwright
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.deploy-preview.outputs.VERCEL_DEPLOYMENT_URL }}
 
@@ -105,11 +76,11 @@ jobs:
         run: bun install
 
       - name: Pull Vercel Environment Information
-        run: bun x vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: bun x vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
 
       - name: Build Project Artifacts
-        run: bun x vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        run: bun x vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel
         id: deploy-prod
