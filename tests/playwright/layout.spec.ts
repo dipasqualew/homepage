@@ -3,7 +3,7 @@ import { GOOD_LAYOUT, GOOD_LAYOUT_PARSED, BAD_LAYOUT } from '../fixtures/layouts
 
 test.describe("No Layout View", () => {
   test("is rendered when no layout is supplied", async ({ page }) => {
-    const url = `/`;
+    const url = `/layout`;
 
     await page.goto(url);
 
@@ -13,7 +13,7 @@ test.describe("No Layout View", () => {
   });
 
   test("is rendered when a rubbish layout is supplied", async ({ page }) => {
-    const url = `/?layout=${BAD_LAYOUT}`;
+    const url = `/layout/${BAD_LAYOUT}`;
 
     await page.goto(url);
 
@@ -24,7 +24,7 @@ test.describe("No Layout View", () => {
   });
 
   test("parses a valid layout and provides a navigation link", async ({ page }) => {
-    const url = `/?layout=${BAD_LAYOUT}`;
+    const url = `/layout/${BAD_LAYOUT}`;
 
     await page.goto(url);
 
@@ -40,7 +40,7 @@ test.describe("No Layout View", () => {
 
 test.describe("Layout View", () => {
   test("is rendered with a valid layout", async ({ page }) => {
-    const url = `/?layout=${GOOD_LAYOUT}`;
+    const url = `/layout/${GOOD_LAYOUT}`;
 
     await page.goto(url);
 

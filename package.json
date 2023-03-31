@@ -12,7 +12,8 @@
     "test:playwright:report": "playwright test show-report"
   },
   "dependencies": {
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.32.1",
