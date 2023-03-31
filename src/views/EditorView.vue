@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { useRouter } from 'vue-router';
+
+import { storageKey } from '../injectionKeys';
 import { Layout } from '../profiles';
-import { createProfile, saveProfile, getLayoutProfiles, LayoutProfile } from '../profiles';
+import { LayoutProfile, createProfile, getLayoutProfiles, saveProfile } from '../profiles';
 
 const layout = ref('');
 
@@ -13,6 +15,8 @@ const parsed = computed(() => {
         return null;
     }
 });
+
+const storage = inject(storageKey, ()  => localStorage, true);
 
 const profileName = ref('');
 
@@ -25,13 +29,13 @@ const commitProfile = () => {
 
     const profile = createProfile(profileName.value, JSON.parse(atob(layout.value)) as unknown as Layout);
 
-    saveProfile(profile, localStorage);
+    saveProfile(profile, storage);
 
     router.push({ name: 'Layout', params: { layout: profile.uuid } });
 };
 
 const allProfiles = computed(() => {
-    const layoutProfiles = getLayoutProfiles(localStorage);
+    const layoutProfiles = getLayoutProfiles(storage);
 
     const existingProfiles = Object.values(layoutProfiles.value).filter((item) => !!item) as LayoutProfile[];
 

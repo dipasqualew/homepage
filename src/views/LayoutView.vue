@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue';
+import { inject, onBeforeMount, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import ContainerRenderer from '../components/ContainerRenderer.vue';
-import { loadProfile, LayoutProfile } from '../profiles';
+import { storageKey } from '../injectionKeys';
+import { LayoutProfile, loadProfile } from '../profiles';
 
 const route = useRoute();
 const profileUuid = route.params.layout as string;
 
 const profile = ref<LayoutProfile | null>(null);
+const storage = inject(storageKey, ()  => localStorage, true);
 
 onBeforeMount(() => {
     try {
-        profile.value = loadProfile(profileUuid, localStorage);
+        profile.value = loadProfile(profileUuid, storage);
     } catch (error) {
         return;
     }

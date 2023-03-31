@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
-import { GOOD_LAYOUT, GOOD_LAYOUT_PARSED, PROFILE } from '../fixtures/layouts.js';
+import { expect, test } from '@playwright/test';
+
 import { getSetupLocalStorageFunc } from './utils.js';
+import { GOOD_LAYOUT, GOOD_LAYOUT_PARSED, PROFILE } from '../fixtures/layouts.js';
 
 test.describe('Editor View', () => {
 
@@ -18,6 +19,18 @@ test.describe('Editor View', () => {
 
             await expect(locator).toContainText(JSON.stringify(GOOD_LAYOUT_PARSED, null, 2));
         });
+
+        test('doesn\'t render any link', async ({ page }) => {
+            const url = '/';
+
+            await page.goto(url);
+
+            const locator = page.locator('a');
+
+            const links = await locator.all();
+            await expect(links).toHaveLength(0);
+
+        });
     });
 
     test.describe('with stored profiles', () => {
@@ -29,6 +42,11 @@ test.describe('Editor View', () => {
 
         test.beforeEach(async ({ page }) => {
             await setupLocalStorage({ page });
+        });
+
+        test.afterEach(async ({ page }) => {
+            await page.goto('/');
+            await page.evaluate(() => window.localStorage.clear());
         });
 
         test('renders a clickable list of profiles', async ({ page }) => {

@@ -1,4 +1,4 @@
-import { useStorage, StorageLike, RemovableRef } from '@vueuse/core';
+import { RemovableRef, StorageLike, useStorage } from '@vueuse/core';
 import {v4 as uuidv4} from 'uuid';
 
 export interface Favourite {

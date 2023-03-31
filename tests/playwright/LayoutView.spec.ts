@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
-import { PROFILE } from '../fixtures/layouts.js';
+import { expect, test } from '@playwright/test';
+
 import { getSetupLocalStorageFunc } from './utils.js';
+import { PROFILE } from '../fixtures/layouts.js';
 
 test.describe('Layout View', () => {
     const setupLocalStorage = getSetupLocalStorageFunc({
@@ -13,7 +14,7 @@ test.describe('Layout View', () => {
         await setupLocalStorage({ page });
     });
 
-    test.afterAll(async ({ page }) => {
+    test.afterEach(async ({ page }) => {
         await page.goto('/');
         await page.evaluate(() => window.localStorage.clear());
     });

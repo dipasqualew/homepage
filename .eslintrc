@@ -17,6 +17,7 @@
     },
     "plugins": [
         "vue",
+        "import",
         "@typescript-eslint"
     ],
     "rules": {
@@ -35,6 +36,71 @@
         "semi": [
             "error",
             "always"
+        ],
+        "arrow-body-style": "off",
+        "camelcase": "off",
+        "class-methods-use-this": "off",
+        "max-len": "off",
+        "no-await-in-loop": "off",
+        "no-multiple-empty-lines": [
+            "error",
+            {
+                "max": 2
+            }
+        ],
+        "no-restricted-syntax": "off",
+        "no-unused-vars": [
+            "error",
+            {
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_"
+            }
+        ],
+        // Imports
+        "import/no-cycle": "off",
+        "import/extensions": "off",
+        "import/no-unresolved": "off",
+        "import/prefer-default-export": "off",
+        "import/order": [
+            "error",
+            {
+                "alphabetize": {
+                    "order": "asc"
+                },
+                "groups": [
+                    "builtin",
+                    "external",
+                    "internal"
+                ],
+                "pathGroups": [
+                    // Order all @/src/**
+                    // just before all local/relative imports
+                    {
+                        "pattern": "@/src/**",
+                        "group": "internal",
+                        "position": "before"
+                    },
+                    // Order all remaining alias
+                    // just before all local/relative imports
+                    {
+                        "pattern": "@/**",
+                        "group": "internal",
+                        "position": "before"
+                    }
+                ],
+                "pathGroupsExcludedImportTypes": [
+                    "builtin"
+                ],
+                "newlines-between": "always"
+            }
+        ],
+        // Also order the individual import members
+        // from each file declaration
+        "sort-imports": [
+            "error",
+            {
+                "ignoreDeclarationSort": true
+            }
         ]
     }
 }

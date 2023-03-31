@@ -1,8 +1,9 @@
-import { createApp } from 'vue';
+import { setupApp } from './app';
 import './assets/styles.css';
-import App from './App.vue';
-import { router } from './router';
 
-createApp(App)
-    .use(router)
-    .mount('#app');
+
+export const APP_ROOT = '#app';
+
+export const app = setupApp({ storage: localStorage });
+
+app.mount(APP_ROOT);
