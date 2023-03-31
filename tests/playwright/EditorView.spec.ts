@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { getSetupLocalStorageFunc } from './utils.js';
-import { GOOD_LAYOUT, GOOD_LAYOUT_PARSED, PROFILE } from '../fixtures/layouts.js';
+import { GOOD_LAYOUT_STRING, PROFILE } from '../fixtures/layouts.js';
 
 test.describe('Editor View', () => {
 
@@ -24,11 +24,15 @@ test.describe('Editor View', () => {
 
             const editor = page.locator('#no-layout-editor');
 
-            await editor.fill(GOOD_LAYOUT);
+            await editor.fill(GOOD_LAYOUT_STRING);
 
             const locator = page.locator('#app');
 
-            await expect(locator).toContainText(JSON.stringify(GOOD_LAYOUT_PARSED, null, 2));
+            await expect(locator).toContainText('gmail');
+            await expect(locator).toContainText('gdrive');
+            await expect(locator).toContainText('gcalendar');
+            await expect(locator).toContainText('chatgpt');
+            await expect(locator).toContainText('1password');
         });
 
         test('doesn\'t render any link', async ({ page }) => {

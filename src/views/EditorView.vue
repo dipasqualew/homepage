@@ -2,25 +2,25 @@
 import { computed, inject, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import ContainerRenderer from '../components/ContainerRenderer.vue';
 import { useMeta } from '../hooks';
 import { storageKey } from '../injectionKeys';
 import { Layout } from '../profiles';
 import { createProfile, saveProfile } from '../profiles';
 
-const layout = ref('');
 
+const profileName = ref('');
+const layout = ref('');
 
 const parsed = computed(() => {
     try {
-        return JSON.stringify(JSON.parse(atob(layout.value)), null, 2);
+        return JSON.parse(layout.value);
     } catch (error) {
         return null;
     }
 });
 
 const storage = inject(storageKey, ()  => localStorage, true);
-
-const profileName = ref('');
 
 const router = useRouter();
 
@@ -29,7 +29,7 @@ const commitProfile = () => {
         throw new Error('Cannot save invalid layout.');
     }
 
-    const profile = createProfile(profileName.value, JSON.parse(atob(layout.value)) as unknown as Layout);
+    const profile = createProfile(profileName.value, parsed as unknown as Layout);
 
     saveProfile(profile, storage);
 
@@ -43,15 +43,21 @@ meta.title.value = 'Create a new Layout Profile';
 <template>
     <v-container>
         <v-row>
-            <v-col class="max-height-50">
+            <v-col>
                 <div>
                     <v-text-field label="Profile Name" variant="outlined" v-model="profileName"></v-text-field>
-                    <v-textarea label="Label" variant="outlined" v-model="layout" id="no-layout-editor"></v-textarea>
+                    <v-textarea label="Layout Code" variant="outlined" v-model="layout" id="no-layout-editor" auto-grow></v-textarea>
                 </div>
             </v-col>
-            <v-col class="max-height-50">
-                <pre v-if="parsed" class="max-height-50">{{ parsed }}</pre>
-                <pre v-else>Invalid layout</pre>
+            <v-col>
+                <div v-if="parsed">
+                    <ContainerRenderer :layout="parsed" :disableLinks="true" class="height-50vh"/>
+                </div>
+                <div v-else>
+                    <v-alert type="error" prominent>
+                        Invalid layout
+                    </v-alert>
+                </div>
             </v-col>
         </v-row>
         <v-row>
@@ -65,9 +71,7 @@ meta.title.value = 'Create a new Layout Profile';
 </template>
 
 <style scoped>
-pre {
-    max-height: 50vh;
-    overflow: auto;
-    font-size: 14px;
+.height-50vh {
+    height: 50vh;
 }
 </style>

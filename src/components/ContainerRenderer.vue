@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import BigCard from './BigCard.vue';
-import FlexContainer from './FlexContainer.vue';
 import { Favourite } from '../profiles';
 
 interface BigCardProp {
@@ -16,18 +15,33 @@ interface Container {
 type Layout = BigCardProp | Container
 
 interface Props {
-    layout: Layout
+    layout: Layout;
+    disableLinks: boolean;
 }
 
 const props = defineProps<Props>();
 
 </script>
 <template>
-    <BigCard v-if="props.layout.block === 'big-card'" v-bind="props.layout.favourite" />
-    <div v-else-if="props.layout.block === 'root'">
-        <ContainerRenderer v-for="child, i in props.layout.children" :layout="child" :key="i" />
-    </div>
-    <FlexContainer v-else :direction="props.layout.block">
-        <ContainerRenderer v-for="child, i in props.layout.children" :layout="child" :key="i" />
-    </FlexContainer>
+    <BigCard v-if="props.layout.block === 'big-card'" v-bind="props.layout.favourite" :disable-links="disableLinks" />
+    <v-row v-else-if="props.layout.block === 'root'" class="root" no-gutters>
+        <ContainerRenderer v-for="child, i in props.layout.children" :layout="child" :key="i" :disable-links="disableLinks" />
+    </v-row>
+    <v-row v-else-if="props.layout.block === 'row'" no-gutters>
+        <ContainerRenderer v-for="child, i in props.layout.children" :layout="child" :key="i" :disable-links="disableLinks" />
+    </v-row>
+    <v-col v-else class="col" no-gutters>
+        <ContainerRenderer v-for="child, i in props.layout.children" :layout="child" :key="i" :disable-links="disableLinks" />
+    </v-col>
 </template>
+
+<style scoped>
+.root {
+    height: 100%;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+}
+</style>

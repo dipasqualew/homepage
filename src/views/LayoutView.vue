@@ -28,7 +28,7 @@ onBeforeMount(() => {
 
 <template>
     <div class="fullpage" v-if="profile">
-        <ContainerRenderer :layout="profile.layout" />
+        <ContainerRenderer :layout="profile.layout" :disable-links="false" />
     </div>
     <div v-else class="text-h3 text-center pt-5">Layout Profile not found!</div>
 </template>

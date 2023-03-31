@@ -58,7 +58,6 @@ test.describe('Layout View', () => {
 
             const locator = page.locator('#app');
 
-            await expect(locator).not.toContainText('No layout or invalid layout supplied');
             await expect(locator).toContainText('gmail');
             await expect(locator).toContainText('gdrive');
             await expect(locator).toContainText('gcalendar');
