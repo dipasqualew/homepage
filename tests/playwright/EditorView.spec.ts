@@ -1,54 +1,62 @@
 import { expect, test } from '@playwright/test';
 
 import { getSetupLocalStorageFunc } from './utils.js';
-import { GOOD_LAYOUT_STRING, PROFILE } from '../fixtures/layouts.js';
+import { PROFILE, PROFILE_SIMPLE } from '../fixtures/layouts.js';
 
 test.describe('Editor View', () => {
-
-    test('Sets the correct meta', async ({ page }) => {
+    test.describe('New profile editor', () => {
         const url = '/';
 
-        await page.goto(url);
+        test('Sets the correct meta', async ({ page }) => {
+            await page.goto(url);
 
-        const locator = page.locator('h1');
+            const locator = page.locator('h1');
 
-        await expect(locator).toContainText('Create a new Layout Profile');
+            await expect(locator).toContainText('Create a new Layout Profile');
+        });
+
+        test.describe('create layout workflow', () => {
+
+            test.beforeEach(async ({ page }) => {
+                await page.goto(url);
+
+                const profileNameInput = page.getByLabel('Profile Name');
+                const editor = page.getByLabel('Layout Code');
+
+                await profileNameInput.fill(PROFILE.name);
+                await editor.fill(JSON.stringify(PROFILE.layout));
+            });
+
+            test('parses a valid layout', async ({ page }) => {
+                const locator = page.locator('#app');
+
+                await expect(locator).toContainText('gmail');
+                await expect(locator).toContainText('gdrive');
+                await expect(locator).toContainText('gcalendar');
+                await expect(locator).toContainText('chatgpt');
+                await expect(locator).toContainText('1password');
+            });
+
+            test('commits, creates a new profile and navigates to it', async ({ page }) => {
+                const commitButton = page.getByText('Commit');
+                await commitButton.click();
+
+                await expect(page.url()).toContain('/layout/');
+
+                const locator = page.locator('#app');
+                await expect(locator).toContainText('gmail');
+                await expect(locator).toContainText('gdrive');
+                await expect(locator).toContainText('gcalendar');
+                await expect(locator).toContainText('chatgpt');
+                await expect(locator).toContainText('1password');
+            });
+
+        });
 
     });
 
-    test.describe('without stored profiles', () => {
-        test('parses a valid layout and provides a navigation link', async ({ page }) => {
-            const url = '/';
 
-            await page.goto(url);
-
-            const editor = page.locator('#no-layout-editor');
-
-            await editor.fill(GOOD_LAYOUT_STRING);
-
-            const locator = page.locator('#app');
-
-            await expect(locator).toContainText('gmail');
-            await expect(locator).toContainText('gdrive');
-            await expect(locator).toContainText('gcalendar');
-            await expect(locator).toContainText('chatgpt');
-            await expect(locator).toContainText('1password');
-        });
-
-        test('doesn\'t render any link', async ({ page }) => {
-            const url = '/';
-
-            await page.goto(url);
-
-            const locator = page.locator('a');
-
-            const links = await locator.all();
-            await expect(links).toHaveLength(0);
-
-        });
-    });
-
-    test.describe('with stored profiles', () => {
+    test.describe('Existing profile editor', () => {
         const setupLocalStorage = getSetupLocalStorageFunc({
             'layout-profiles': JSON.stringify({
                 [PROFILE.uuid]: PROFILE,
@@ -60,27 +68,74 @@ test.describe('Editor View', () => {
         });
 
         test.afterEach(async ({ page }) => {
-            await page.goto('/');
             await page.evaluate(() => window.localStorage.clear());
         });
 
-        test('renders a clickable list of profiles', async ({ page }) => {
-            const url = '/';
 
-            await page.goto(url);
+        test.describe('navigating to a non-existing profile', () => {
+            const url = '/edit/6133e619-fe04-4eb4-accc-6097636bf1fe';
 
-            const locator = page.locator('a');
+            test('sets the correct meta', async ({ page }) => {
+                await page.goto(url);
 
-            const links = await locator.all();
-            await expect(links).toHaveLength(1);
+                const locator = page.locator('h1');
+                await expect(locator).toContainText('Profile not found.');
+            });
 
-            const link = links[0];
-            await expect(link).toContainText(PROFILE.name);
+            test('renders 404 if the profile is not found in the storage', async ({ page }) => {
+                await page.goto(url);
 
-            const href = await link.getAttribute('href');
-            await expect(href).toContain(PROFILE.uuid);
+                const locator = page.locator('#app');
+                const expected = 'Layout Profile not found!';
+
+                await expect(locator).toContainText(expected);
+            });
         });
 
+        test.describe('create layout workflow', () => {
+            const url = `/edit/${PROFILE.uuid}`;
+
+            test.beforeEach(async ({ page }) => {
+                await page.goto(url);
+            });
+
+            test('sets the correct meta', async ({ page }) => {
+                const locator = page.locator('h1');
+                await expect(locator).toContainText(`Edit Profile: ${PROFILE.name}`);
+            });
+
+            test('renders the existing layout', async ({ page }) => {
+                const locator = page.locator('#app');
+
+                await expect(locator).toContainText('gmail');
+                await expect(locator).toContainText('gdrive');
+                await expect(locator).toContainText('gcalendar');
+                await expect(locator).toContainText('chatgpt');
+                await expect(locator).toContainText('1password');
+            });
+
+            test('updates the layout and navigates to it', async ({ page }) => {
+                const profileNameInput = page.getByLabel('Profile Name');
+                const editor = page.getByLabel('Layout Code');
+
+                await profileNameInput.fill(PROFILE_SIMPLE.name);
+                await editor.fill(JSON.stringify(PROFILE_SIMPLE.layout));
+
+                const commitButton = page.getByText('Commit');
+                await commitButton.click();
+
+                await expect(page.url()).toContain(`/layout/${PROFILE.uuid}`);
+
+                const locator = page.locator('#app');
+                await expect(locator).toContainText('chatgpt');
+                await expect(locator).not.toContainText('gmail');
+                await expect(locator).not.toContainText('gdrive');
+                await expect(locator).not.toContainText('gcalendar');
+                await expect(locator).not.toContainText('1password');
+            });
+
+        });
     });
+
 
 });

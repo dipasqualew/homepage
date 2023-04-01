@@ -39,11 +39,11 @@ export const getLayoutProfiles = (storage: StorageLike ): RemovableRef<LayoutPro
     return layoutProfiles;
 };
 
-export const createProfile = (name: string, layout: Layout): LayoutProfile => {
+export const createProfile = (props: { name?: string, layout?: Layout, uuid?: string | null }): LayoutProfile => {
     const profile: LayoutProfile = {
-        uuid: uuidv4(),
-        name,
-        layout,
+        uuid: props.uuid || uuidv4(),
+        name: props.name || '',
+        layout: props.layout || { block: 'root', children: [] },
     };
 
     return profile;
