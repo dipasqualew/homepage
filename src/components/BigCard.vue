@@ -7,6 +7,7 @@ interface Props {
   url: string;
   icon: string;
   disableLinks: boolean;
+  prefix: string;
 }
 
 const props = defineProps<Props>();
@@ -16,7 +17,7 @@ const component = computed(() => props.disableLinks ? 'div' : 'a');
 </script>
 
 <template>
-  <component :is="component" class="big-card" :href="url">
+  <component :is="component" class="big-card" :href="url" :data-item-id="`${props.prefix}-${props.title}`">
     <div class="big-card-content">
       <div><img :src="icon" /></div>
       <div class="label"><span>{{ title }}</span></div>
