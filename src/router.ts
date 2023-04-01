@@ -16,9 +16,14 @@ export const routes = [
     },
     {
         path: '/',
-        name: 'Home',
+        name: 'NewProfileEditor',
         component: EditorView,
-    }
+    },
+    {
+        path: '/edit/:profile',
+        name: 'ExistingProfileEditor',
+        component: EditorView,
+    },
 ];
 
 export const router = createRouter({
