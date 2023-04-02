@@ -33,10 +33,6 @@
             "error",
             "single"
         ],
-        "semi": [
-            "error",
-            "always"
-        ],
         "arrow-body-style": "off",
         "camelcase": "off",
         "class-methods-use-this": "off",
@@ -49,13 +45,20 @@
             }
         ],
         "no-restricted-syntax": "off",
-        "no-unused-vars": [
+        // TypeScript
+        "@typescript-eslint/no-unused-vars": [
             "error",
             {
-                "argsIgnorePattern": "^_",
-                "varsIgnorePattern": "^_"
+                "argsIgnorePattern": "^_"
             }
         ],
+        // these eslint rules can report incorrect errors in TypeScript files
+        "semi": "off",
+        "no-shadow": "off",
+        "@typescript-eslint/semi": "error",
+        "@typescript-eslint/no-shadow": "error",
+        "@typescript-eslint/no-empty-interface": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
         // Imports
         "import/no-cycle": "off",
         "import/extensions": "off",

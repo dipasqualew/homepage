@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
 
 import { getSetupLocalStorageFunc } from './utils.js';
-import { PROFILE } from '../fixtures/layouts.js';
+import { PROFILE_DEFAULT } from '../fixtures/layouts.js';
 
 test.describe('Layout View', () => {
     const setupLocalStorage = getSetupLocalStorageFunc({
         'layout-profiles': JSON.stringify({
-            [PROFILE.uuid]: PROFILE,
+            [PROFILE_DEFAULT.uuid]: PROFILE_DEFAULT,
         })
     });
 
@@ -42,14 +42,14 @@ test.describe('Layout View', () => {
     });
 
     test.describe('with a valid profile uuid', () => {
-        const url = `/layout/${PROFILE.uuid}`;
+        const url = `/layout/${PROFILE_DEFAULT.uuid}`;
 
         test('Sets the correct meta', async ({ page }) => {
             await page.goto(url);
 
             const locator = page.locator('h1');
 
-            await expect(locator).toContainText(`Layout Profile: ${PROFILE.name}`);
+            await expect(locator).toContainText(`Layout Profile: ${PROFILE_DEFAULT.name}`);
         });
 
         test('renders the layout in storage', async ({ page }) => {

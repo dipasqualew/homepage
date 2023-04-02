@@ -6,26 +6,25 @@ interface Props {
   title: string;
   url: string;
   icon: string;
-  disableLinks: boolean;
-  prefix: string;
+  editMode?: boolean;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), { editMode: false });
 
-const component = computed(() => props.disableLinks ? 'div' : 'a');
+const component = computed(() => props.editMode ? 'div' : 'a');
 
 </script>
 
 <template>
-  <component :is="component" class="big-card" :href="url" :data-item-id="`${props.prefix}-${props.title}`">
+  <component :is="component" class="big-card" :class="props.editMode ? '' : 'no-edit-mode'" :href="url">
     <div class="big-card-content">
-      <div><img :src="icon" /></div>
+      <div class="icon-container"><img :src="icon" /></div>
       <div class="label"><span>{{ title }}</span></div>
     </div>
   </component>
 </template>
 
-<style scoped>
+<style>
 .big-card {
   width: 100%;
   min-width: 100px;
@@ -37,24 +36,35 @@ const component = computed(() => props.disableLinks ? 'div' : 'a');
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  color: black;
+}
+
+.no-edit-mode {
   transition: background-color 1s;
 }
 
-.big-card:hover {
+.no-edit-mode:hover {
   background-color: lightgray;
 }
 
 .big-card-content {
   text-align: center;
   margin: auto;
-  font-size: x-large;
+  font-size: 1.5em;
+  width: 100%
 }
 
 .label {
   margin-top: 15px;
 }
 
-.big-card img {
-  width: 100px;
+.icon-container {
+  width: 20%;
+  margin: auto;
+}
+.icon-container img {
+  width: 100%;
+  object-fit: contain;
 }
 </style>

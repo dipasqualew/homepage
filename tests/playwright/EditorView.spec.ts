@@ -1,9 +1,16 @@
 import { expect, test } from '@playwright/test';
 
+import { LayoutBuilder } from './pom/LayoutBuilder.js';
 import { getSetupLocalStorageFunc } from './utils.js';
-import { PROFILE, PROFILE_SIMPLE } from '../fixtures/layouts.js';
+import { Container } from '../../src/profiles.js';
+import { BOOKMARKS, PROFILE_DEFAULT, PROFILE_EMPTY, PROFILE_SIMPLE } from '../fixtures/layouts.js';
+
 
 test.describe('Editor View', () => {
+    test.afterEach(async ({ page }) => {
+        await page.evaluate(() => window.localStorage.clear());
+    });
+
     test.describe('New profile editor', () => {
         const url = '/';
 
@@ -17,19 +24,13 @@ test.describe('Editor View', () => {
 
         test.describe('create layout workflow', () => {
 
-            test.beforeEach(async ({ page }) => {
-                await page.goto(url);
-
-                const profileNameInput = page.getByLabel('Profile Name');
-                const editor = page.getByLabel('Layout Code');
-
-                await profileNameInput.fill(PROFILE.name);
-                await editor.fill(JSON.stringify(PROFILE.layout));
-            });
-
             test('parses a valid layout', async ({ page }) => {
-                const locator = page.locator('#app');
+                const builder = new LayoutBuilder(page, url);
+                await builder.setup();
 
+                await builder.fillProfile(PROFILE_DEFAULT);
+
+                const locator = builder.visualEditor;
                 await expect(locator).toContainText('gmail');
                 await expect(locator).toContainText('gdrive');
                 await expect(locator).toContainText('gcalendar');
@@ -38,17 +39,60 @@ test.describe('Editor View', () => {
             });
 
             test('commits, creates a new profile and navigates to it', async ({ page }) => {
+                const builder = new LayoutBuilder(page);
+                let currentLayout = PROFILE_EMPTY;
+                let targetBlock = currentLayout.root;
+
+                await builder.setup();
+                await builder.fillProfile(PROFILE_EMPTY);
+                await builder.performActionOnChild(targetBlock.uuid, 'Add container');
+                await builder.performActionOnChild(targetBlock.uuid, 'Add container');
+                await builder.performActionOnChild(targetBlock.uuid, 'Add container');
+
+                currentLayout = await builder.getProfileValue();
+                targetBlock = currentLayout.root.children[0] as Container;
+                await builder.performActionOnChild(targetBlock.uuid, 'Add container');
+                await builder.performActionOnChild(targetBlock.uuid, 'Add container');
+                await builder.performActionOnChild(targetBlock.uuid, 'Add container');
+                await builder.performActionOnChild(targetBlock.uuid, 'Transform in a column');
+
+                currentLayout = await builder.getProfileValue();
+
+                targetBlock = (currentLayout.root.children[0] as Container).children[0] as Container;
+                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.gmail.title, BOOKMARKS.gmail.url, BOOKMARKS.gmail.icon);
+
+                targetBlock = (currentLayout.root.children[0] as Container).children[1] as Container;
+                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.gdrive.title, BOOKMARKS.gdrive.url, BOOKMARKS.gdrive.icon);
+
+                targetBlock = (currentLayout.root.children[0] as Container).children[2] as Container;
+                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.gcalendar.title, BOOKMARKS.gcalendar.url, BOOKMARKS.gcalendar.icon);
+
+                targetBlock = currentLayout.root.children[1] as Container;
+                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.chatgpt.title, BOOKMARKS.chatgpt.url, BOOKMARKS.chatgpt.icon);
+
+                targetBlock = currentLayout.root.children[2] as Container;
+                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.onepassword.title, BOOKMARKS.onepassword.url, BOOKMARKS.onepassword.icon);
+
+                currentLayout = await builder.getProfileValue();
+
+                test.info().annotations.push({ type: 'finalLayout', description: JSON.stringify(currentLayout, null, 2) });
+
+                await expect(builder.app).toContainText('gmail');
+                await expect(builder.app).toContainText('gdrive');
+                await expect(builder.app).toContainText('gcalendar');
+                await expect(builder.app).toContainText('chatgpt');
+                await expect(builder.app).toContainText('1password');
+
                 const commitButton = page.getByText('Commit');
                 await commitButton.click();
 
                 await expect(page.url()).toContain('/layout/');
 
-                const locator = page.locator('#app');
-                await expect(locator).toContainText('gmail');
-                await expect(locator).toContainText('gdrive');
-                await expect(locator).toContainText('gcalendar');
-                await expect(locator).toContainText('chatgpt');
-                await expect(locator).toContainText('1password');
+                await expect(builder.app).toContainText('gmail');
+                await expect(builder.app).toContainText('gdrive');
+                await expect(builder.app).toContainText('gcalendar');
+                await expect(builder.app).toContainText('chatgpt');
+                await expect(builder.app).toContainText('1password');
             });
 
         });
@@ -59,18 +103,13 @@ test.describe('Editor View', () => {
     test.describe('Existing profile editor', () => {
         const setupLocalStorage = getSetupLocalStorageFunc({
             'layout-profiles': JSON.stringify({
-                [PROFILE.uuid]: PROFILE,
+                [PROFILE_DEFAULT.uuid]: PROFILE_DEFAULT,
             })
         });
 
         test.beforeEach(async ({ page }) => {
             await setupLocalStorage({ page });
         });
-
-        test.afterEach(async ({ page }) => {
-            await page.evaluate(() => window.localStorage.clear());
-        });
-
 
         test.describe('navigating to a non-existing profile', () => {
             const url = '/edit/6133e619-fe04-4eb4-accc-6097636bf1fe';
@@ -93,7 +132,7 @@ test.describe('Editor View', () => {
         });
 
         test.describe('create layout workflow', () => {
-            const url = `/edit/${PROFILE.uuid}`;
+            const url = `/edit/${PROFILE_DEFAULT.uuid}`;
 
             test.beforeEach(async ({ page }) => {
                 await page.goto(url);
@@ -101,7 +140,7 @@ test.describe('Editor View', () => {
 
             test('sets the correct meta', async ({ page }) => {
                 const locator = page.locator('h1');
-                await expect(locator).toContainText(`Edit Profile: ${PROFILE.name}`);
+                await expect(locator).toContainText(`Edit Profile: ${PROFILE_DEFAULT.name}`);
             });
 
             test('renders the existing layout', async ({ page }) => {
@@ -119,12 +158,15 @@ test.describe('Editor View', () => {
                 const editor = page.getByLabel('Layout Code');
 
                 await profileNameInput.fill(PROFILE_SIMPLE.name);
-                await editor.fill(JSON.stringify(PROFILE_SIMPLE.layout));
+                await editor.fill(JSON.stringify({
+                    ...PROFILE_SIMPLE,
+                    uuid: PROFILE_DEFAULT.uuid,
+                }));
 
                 const commitButton = page.getByText('Commit');
                 await commitButton.click();
 
-                await expect(page.url()).toContain(`/layout/${PROFILE.uuid}`);
+                await expect(page.url()).toContain(`/layout/${PROFILE_DEFAULT.uuid}`);
 
                 const locator = page.locator('#app');
                 await expect(locator).toContainText('chatgpt');

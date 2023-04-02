@@ -3,14 +3,14 @@ import { computed, inject } from 'vue';
 
 import { useMeta } from './hooks';
 import { storageKey } from './injectionKeys';
-import { LayoutProfile, getLayoutProfiles } from './profiles';
+import { Layout, getLayoutProfiles } from './profiles';
 
 const storage = inject(storageKey, ()  => localStorage, true);
 
 const allProfiles = computed(() => {
     const layoutProfiles = getLayoutProfiles(storage);
 
-    const existingProfiles = Object.values(layoutProfiles.value).filter((item) => !!item) as LayoutProfile[];
+    const existingProfiles = Object.values(layoutProfiles.value).filter((item) => !!item) as Layout[];
 
     return existingProfiles;
 });

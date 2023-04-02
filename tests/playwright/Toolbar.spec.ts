@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { getSetupLocalStorageFunc } from './utils.js';
-import { PROFILE, PROFILE_SIMPLE } from '../fixtures/layouts.js';
+import { PROFILE_DEFAULT, PROFILE_SIMPLE } from '../fixtures/layouts.js';
 
 test.describe('Toolbar', () => {
     test.describe('without stored profiles', () => {
@@ -18,7 +18,7 @@ test.describe('Toolbar', () => {
 
         const setupLocalStorage = getSetupLocalStorageFunc({
             'layout-profiles': JSON.stringify({
-                [PROFILE.uuid]: PROFILE,
+                [PROFILE_DEFAULT.uuid]: PROFILE_DEFAULT,
                 [PROFILE_SIMPLE.uuid]: PROFILE_SIMPLE,
             })
         });
@@ -40,10 +40,10 @@ test.describe('Toolbar', () => {
             await expect(links).toHaveLength(2);
 
             const link = links[0];
-            await expect(link).toContainText(PROFILE.name);
+            await expect(link).toContainText(PROFILE_DEFAULT.name);
 
             const href = await link.getAttribute('href');
-            await expect(href).toContain(PROFILE.uuid);
+            await expect(href).toContain(PROFILE_DEFAULT.uuid);
         });
 
     });

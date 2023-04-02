@@ -1,7 +1,7 @@
 import { Page } from 'playwright';
 
 export type LocalStorageSetterContext = { page: Page };
-export type LocalStorageSetter = (_ctx: LocalStorageSetterContext) => Promise<void>
+export type LocalStorageSetter = (_ctx: LocalStorageSetterContext) => Promise<void>;
 export type LocalStorageDict = Record<string, string>;
 
 export const getSetupLocalStorageFunc = (contents: LocalStorageDict): LocalStorageSetter => {

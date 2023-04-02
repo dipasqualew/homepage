@@ -2,9 +2,9 @@
 import { onBeforeMount, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import ContainerRenderer from '../components/ContainerRenderer.vue';
+import ContainerRoot from '../components/ContainerRoot.vue';
 import { useMeta, useStorage } from '../hooks';
-import { LayoutProfile, loadProfile } from '../profiles';
+import { Layout, loadProfile } from '../profiles';
 
 const route = useRoute();
 const storage = useStorage();
@@ -12,7 +12,7 @@ const meta = useMeta();
 
 const profileUuid = route.params.layout as string;
 
-const profile = ref<LayoutProfile | null>(null);
+const profile = ref<Layout | null>(null);
 
 
 onBeforeMount(() => {
@@ -29,7 +29,7 @@ onBeforeMount(() => {
 
 <template>
     <div class="fullpage" v-if="profile">
-        <ContainerRenderer :layout="profile.layout" :disable-links="false" />
+        <ContainerRoot :layout="profile" />
     </div>
     <div v-else class="text-h3 text-center pt-5">Layout Profile not found!</div>
 </template>
