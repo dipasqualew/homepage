@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { BigCardBlock, Container } from '../profiles';
+import { BigCardBlock, Container, Favourite } from '../profiles';
 
 const emit = defineEmits(['profileAction']);
 
 const props = defineProps<{ container: Container | BigCardBlock | null }>();
 const action = ref('');
 
-const bookmark = ref({
-    title: '',
-    url: '',
+const bookmark = ref<Favourite>({
+    label: '',
     icon: '',
-    ...props.container?.type === 'big-card' ? props.container.favourite : {},
+    rows: [
+        {
+            title: '',
+            url: '',
+        }
+    ],
 });
 
 const MAKE_ROW = {
@@ -67,6 +71,17 @@ const onConfirm = () => {
     });
 };
 
+const addRow = () => {
+    bookmark.value.rows.push({
+        title: '',
+        url: '',
+    });
+};
+
+const removeRow = (index: number) => {
+    bookmark.value.rows.splice(index, 1);
+};
+
 </script>
 <template>
 <v-sheet width="100%" class="render-form">
@@ -85,9 +100,15 @@ const onConfirm = () => {
             </v-col>
             <v-col>
                 <div v-if="action === 'add-bookmark' || action === 'edit-bookmark'">
-                    <v-text-field label="Title" variant="outlined" v-model="bookmark.title"></v-text-field>
-                    <v-text-field label="URL" variant="outlined" v-model="bookmark.url"></v-text-field>
+                    <v-btn color="blue" @click="addRow">Add Row</v-btn>
+                    <v-text-field label="Label" variant="outlined" v-model="bookmark.label"></v-text-field>
                     <v-text-field label="Icon" variant="outlined" v-model="bookmark.icon"></v-text-field>
+
+                    <div v-for="row, index in bookmark.rows" :key="row.url">
+                        <v-text-field label="Title (Optional)" variant="outlined" v-model="row.title"></v-text-field>
+                        <v-text-field label="URL" variant="outlined" v-model="row.url"></v-text-field>
+                        <v-btn v-if="bookmark.rows.length > 1" color="red" @click="removeRow(index)">Remove Row</v-btn>
+                    </div>
                 </div>
             </v-col>
         </v-row>

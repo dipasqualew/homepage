@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import { Favourite } from '../profiles';
 
 interface Props {
-  title: string;
-  url: string;
-  icon: string;
-  editMode?: boolean;
+  bookmark: Favourite
+  editMode: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), { editMode: false });
@@ -16,12 +15,17 @@ const component = computed(() => props.editMode ? 'div' : 'a');
 </script>
 
 <template>
-  <component :is="component" class="big-card" :class="props.editMode ? '' : 'no-edit-mode'" :href="url">
+  <div class="big-card" :class="props.editMode ? '' : 'no-edit-mode'">
     <div class="big-card-content">
-      <div class="icon-container"><img :src="icon" /></div>
-      <div class="label"><span>{{ title }}</span></div>
+      <div class="icon-container"><img :src="props.bookmark.icon" /></div>
+      <div v-for="row in props.bookmark.rows" :key="row.title">
+        <component :is="component" :href="row.url" class="label">
+          <span>{{ props.bookmark.label }}</span>
+          <span v-if="row.title">:{{  row.title }}</span>
+        </component>
+      </div>
     </div>
-  </component>
+  </div>
 </template>
 
 <style>
@@ -57,6 +61,9 @@ const component = computed(() => props.editMode ? 'div' : 'a');
 
 .label {
   margin-top: 15px;
+  font-family: monospace;
+  text-decoration: none;
+  color: black;
 }
 
 .icon-container {
@@ -68,3 +75,4 @@ const component = computed(() => props.editMode ? 'div' : 'a');
   object-fit: contain;
 }
 </style>
+

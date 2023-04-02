@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 
+import { assertDefaultLayout } from './assertions.js';
 import { LayoutBuilder } from './pom/LayoutBuilder.js';
 import { getSetupLocalStorageFunc } from './utils.js';
 import { Container } from '../../src/profiles.js';
 import { BOOKMARKS, PROFILE_DEFAULT, PROFILE_EMPTY, PROFILE_SIMPLE } from '../fixtures/layouts.js';
-
 
 test.describe('Editor View', () => {
     test.afterEach(async ({ page }) => {
@@ -59,40 +59,31 @@ test.describe('Editor View', () => {
                 currentLayout = await builder.getProfileValue();
 
                 targetBlock = (currentLayout.root.children[0] as Container).children[0] as Container;
-                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.gmail.title, BOOKMARKS.gmail.url, BOOKMARKS.gmail.icon);
+                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.gmail);
 
                 targetBlock = (currentLayout.root.children[0] as Container).children[1] as Container;
-                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.gdrive.title, BOOKMARKS.gdrive.url, BOOKMARKS.gdrive.icon);
+                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.gdrive);
 
                 targetBlock = (currentLayout.root.children[0] as Container).children[2] as Container;
-                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.gcalendar.title, BOOKMARKS.gcalendar.url, BOOKMARKS.gcalendar.icon);
+                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.gcalendar);
 
                 targetBlock = currentLayout.root.children[1] as Container;
-                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.chatgpt.title, BOOKMARKS.chatgpt.url, BOOKMARKS.chatgpt.icon);
+                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.chatgpt);
 
                 targetBlock = currentLayout.root.children[2] as Container;
-                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.onepassword.title, BOOKMARKS.onepassword.url, BOOKMARKS.onepassword.icon);
+                await builder.addBookmarkOnContainer(targetBlock.uuid, BOOKMARKS.onepassword);
 
                 currentLayout = await builder.getProfileValue();
 
                 test.info().annotations.push({ type: 'finalLayout', description: JSON.stringify(currentLayout, null, 2) });
 
-                await expect(builder.app).toContainText('gmail');
-                await expect(builder.app).toContainText('gdrive');
-                await expect(builder.app).toContainText('gcalendar');
-                await expect(builder.app).toContainText('chatgpt');
-                await expect(builder.app).toContainText('1password');
+                await assertDefaultLayout(builder.app);
 
                 const commitButton = page.getByText('Commit');
                 await commitButton.click();
 
-                await expect(page.url()).toContain('/layout/');
-
-                await expect(builder.app).toContainText('gmail');
-                await expect(builder.app).toContainText('gdrive');
-                await expect(builder.app).toContainText('gcalendar');
-                await expect(builder.app).toContainText('chatgpt');
-                await expect(builder.app).toContainText('1password');
+                await expect(page.url()).toContain(`/layout/${currentLayout.uuid}`);
+                await assertDefaultLayout(builder.app);
             });
 
         });
@@ -145,12 +136,7 @@ test.describe('Editor View', () => {
 
             test('renders the existing layout', async ({ page }) => {
                 const locator = page.locator('#app');
-
-                await expect(locator).toContainText('gmail');
-                await expect(locator).toContainText('gdrive');
-                await expect(locator).toContainText('gcalendar');
-                await expect(locator).toContainText('chatgpt');
-                await expect(locator).toContainText('1password');
+                await assertDefaultLayout(locator);
             });
 
             test('updates the layout and navigates to it', async ({ page }) => {

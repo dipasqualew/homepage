@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 
+import { assertDefaultLayout } from './assertions.js';
 import { getSetupLocalStorageFunc } from './utils.js';
 import { PROFILE_DEFAULT } from '../fixtures/layouts.js';
 
@@ -58,11 +59,7 @@ test.describe('Layout View', () => {
 
             const locator = page.locator('#app');
 
-            await expect(locator).toContainText('gmail');
-            await expect(locator).toContainText('gdrive');
-            await expect(locator).toContainText('gcalendar');
-            await expect(locator).toContainText('chatgpt');
-            await expect(locator).toContainText('1password');
+            await assertDefaultLayout(locator);
         });
     });
 
