@@ -1,10 +1,15 @@
 import { RemovableRef, StorageLike, useStorage } from '@vueuse/core';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
+
+export interface FavouriteRow {
+    title?: string;
+    url: string;
+}
 
 export interface Favourite {
-    title: string;
-    url: string;
+    label: string;
     icon: string;
+    rows: FavouriteRow[];
 }
 
 export interface Block {

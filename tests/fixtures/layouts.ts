@@ -4,29 +4,54 @@ export type BookmarkKeys = 'gmail' | 'gdrive' | 'gcalendar' | 'chatgpt' | 'onepa
 
 export const BOOKMARKS: Record<BookmarkKeys, Favourite> = {
     gmail: {
-        title: 'gmail',
-        url: 'https://mail.google.com/mail/u/0/#inbox',
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg'
+        label: 'gmail',
+        icon: 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg',
+        rows: [
+            {
+                title: 'home',
+                url: 'https://mail.google.com/mail/u/0/#inbox',
+            },
+            {
+                title: 'work',
+                url: 'https://mail.google.com/mail/u/1/#inbox'
+            }
+        ]
     },
     gdrive: {
-        title: 'gdrive',
-        url: 'https://drive.google.com/drive/my-drive',
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/d/da/Google_Drive_logo.png'
+        label: 'gdrive',
+        icon: 'https://upload.wikimedia.org/wikipedia/commons/d/da/Google_Drive_logo.png',
+        rows: [
+            {
+                url: 'https://drive.google.com/drive/my-drive',
+            }
+        ]
     },
     gcalendar: {
-        title: 'gcalendar',
-        url: 'https://calendar.google.com/calendar/u/0/r',
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg'
+        label: 'gcalendar',
+        icon: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg',
+        rows: [
+            {
+                url: 'https://calendar.google.com/calendar/u/0/r',
+            }
+        ]
     },
     chatgpt: {
-        title: 'chatgpt',
-        url: 'https://chat.openai.com/chat?model=gpt-4',
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg'
+        label: 'chatgpt',
+        icon: 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg',
+        rows: [
+            {
+                url: 'https://chat.openai.com/chat?model=gpt-4',
+            }
+        ]
     },
     onepassword: {
-        title: '1password',
-        url: 'https://1password.com',
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/1Password_icon.png/240px-1Password_icon.png'
+        label: '1password',
+        icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/1Password_icon.png/240px-1Password_icon.png',
+        rows: [
+            {
+                url: 'https://1password.com',
+            }
+        ]
     }
 };
 

@@ -134,6 +134,7 @@ const onProfileAction = (context: { action: string, bookmark: Favourite }) => {
         }
 
         if (context.action === 'add-bookmark') {
+            console.log(context.bookmark);
             target.container.children.push({
                 uuid: uuidv4(),
                 type: 'big-card',

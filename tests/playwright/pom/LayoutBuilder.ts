@@ -1,7 +1,7 @@
 import { Locator, Page } from 'playwright';
 
 import { BasePOM } from './BasePOM.js';
-import { Layout } from '../../../src/profiles.js';
+import { Favourite, Layout } from '../../../src/profiles.js';
 
 export class LayoutBuilder extends BasePOM {
     get profileNameInput(): Locator {
@@ -54,19 +54,23 @@ export class LayoutBuilder extends BasePOM {
 
     async addBookmarkOnContainer(
         containerUuid: string,
-        title: string,
-        url: string,
-        icon: string,
+        bookmark: Favourite,
     ): Promise<void> {
         await this.performActionOnChild(containerUuid, 'Add bookmark', async (page) => {
-            const titleInput = page.getByLabel('Title');
-            await titleInput.fill(title);
+            await page.getByLabel('Label').fill(bookmark.label);
+            await page.getByLabel('Icon').fill(bookmark.icon);
 
-            const urlInput = page.getByLabel('URL');
-            await urlInput.fill(url);
+            let index = 0;
+            for (const row of bookmark.rows) {
+                if (index > 0) {
+                    await page.getByText('Add Row').click();
+                }
 
-            const iconInput = page.getByLabel('Icon');
-            await iconInput.fill(icon);
+                await page.getByLabel('Title (Optional)').nth(index).fill(row.title || '');
+                await page.getByLabel('URL').nth(index).fill(row.url);
+
+                index++;
+            }
         });
     }
 }
