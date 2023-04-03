@@ -85,6 +85,12 @@ export const loadProfile = (profileUuid: string, storage: StorageLike): Layout =
     return profile;
 };
 
+export const deleteProfile = (profileUuid: string, storage: StorageLike): void => {
+    const profiles = getLayoutProfiles(storage);
+
+    delete profiles.value[profileUuid];
+};
+
 
 export enum ContainerActions {
     ADD_CONTAINER = 'add-container',

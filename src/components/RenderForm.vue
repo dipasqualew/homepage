@@ -93,7 +93,7 @@ const removeRow = (index: number) => {
             <v-col>
                 <v-select
                     label="Select Action"
-                    data-test-id="layout-select-action"
+                    data-testid="layout-select-action"
                     :items="actions"
                     v-model="action"
                     ></v-select>

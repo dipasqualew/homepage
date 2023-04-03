@@ -13,7 +13,7 @@ export class LayoutBuilder extends BasePOM {
     }
 
     get visualEditor(): Locator {
-        return this.page.locator('[data-test-id="layout-visual-editor"]');
+        return this.page.getByTestId('layout-visual-editor');
     }
 
     async getProfileValue(): Promise<Layout> {
