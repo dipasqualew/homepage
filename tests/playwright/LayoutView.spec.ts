@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { assertDefaultLayout } from './assertions.js';
 import { getSetupLocalStorageFunc } from './utils.js';
-import { PROFILE_DEFAULT } from '../fixtures/layouts.js';
+import { BOOKMARKS, PROFILE_DEFAULT } from '../fixtures/layouts.js';
 
 test.describe('Layout View', () => {
     const setupLocalStorage = getSetupLocalStorageFunc({
@@ -61,6 +61,57 @@ test.describe('Layout View', () => {
 
             await assertDefaultLayout(locator);
         });
+
+        test('renders the default row', async ({ page }) => {
+            await page.goto(url);
+
+            const locator = page.locator('[test-item-id="big-card-gmail"]');
+
+            await expect(locator).toHaveAttribute('href', BOOKMARKS.gmail.rows[0].url);
+            await expect(locator).toContainText('→ gmail:home');
+        });
+
+        for (const [up, down] of [['ArrowUp', 'ArrowDown'], ['w', 's']]) {
+            test(`switches to another selected row using '${up}' and '${down}'`, async ({ page }) => {
+                await page.goto(url);
+
+                const locator = page.locator('[test-item-id="big-card-gmail"]');
+
+                await locator.hover();
+
+                await page.keyboard.press(up);
+                await expect(locator).toHaveAttribute('href', BOOKMARKS.gmail.rows[0].url);
+                await expect(locator).toContainText('→ gmail:home');
+
+                await page.keyboard.press(down);
+                await expect(locator).toHaveAttribute('href', BOOKMARKS.gmail.rows[1].url);
+                await expect(locator).toContainText('→ gmail:work');
+
+                await page.keyboard.press(down);
+                await expect(locator).toHaveAttribute('href', BOOKMARKS.gmail.rows[1].url);
+                await expect(locator).toContainText('→ gmail:work');
+
+                await page.keyboard.press(up);
+                await expect(locator).toHaveAttribute('href', BOOKMARKS.gmail.rows[0].url);
+                await expect(locator).toContainText('→ gmail:home');
+            });
+        }
+
+
+        test('switches focus when leaving the bookmark', async ({ page }) => {
+            await page.goto(url);
+
+            const gmailBookmark = page.locator('[test-item-id="big-card-gmail"]');
+            const gdriveBookmark = page.locator('[test-item-id="big-card-gdrive"]');
+
+            await gmailBookmark.hover();
+            await gdriveBookmark.hover();
+
+            await page.keyboard.press('ArrowDown');
+            await expect(gmailBookmark).toHaveAttribute('href', BOOKMARKS.gmail.rows[0].url);
+            await expect(gmailBookmark).toContainText('→ gmail:home');
+        });
+
     });
 
 
