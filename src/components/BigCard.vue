@@ -8,16 +8,28 @@ interface Props {
   editMode: boolean;
 }
 
+
 const props = withDefaults(defineProps<Props>(), { editMode: false });
 
+/**
+ * The component to use for the big card
+ */
 const component = computed(() => props.editMode ? 'div' : 'a');
 
 /**
- * Return the row marked as default
- * or the first one if none is marked as default
+ * The index of the row that is currently selected
  */
 const selectedIndex = ref(0);
 
+/**
+ * The currently selected row
+ */
+const selected = computed(() => props.bookmark.rows[selectedIndex.value]);
+
+/**
+ * Set up the row marked as default
+ * or the first one if none is marked as default
+ */
 onBeforeMount(() => {
     for (let i = 0; i < props.bookmark.rows.length; i++) {
         if (props.bookmark.rows[i].default) {
@@ -27,8 +39,11 @@ onBeforeMount(() => {
     }
 });
 
-const selected = computed(() => props.bookmark.rows[selectedIndex.value]);
-
+/**
+ * Focus the card when the mouse enters it
+ *
+ * @param event
+ */
 const onMouseEnter = (event: MouseEvent) => {
     if (props.editMode) {
         return;
@@ -37,10 +52,31 @@ const onMouseEnter = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
 
     target.focus();
-
-    console.log(document.hasFocus());
 };
 
+/**
+ * Blur the card when the mouse leaves it.
+ *
+ * This is necessary to avoid focus animation
+ * once the mouse leaves the card.
+ *
+ * @param event
+ */
+const onMouseLeave = (event: MouseEvent) => {
+    if (props.editMode) {
+        return;
+    }
+
+    const target = event.target as HTMLElement;
+
+    target.blur();
+};
+
+/**
+ * Switch the selected row when the user presses the up or down arrow
+ *
+ * @param event
+ */
 const switchSelected = (event: KeyboardEvent) => {
     if (props.editMode || props.bookmark.rows.length <= 1) {
         return;
@@ -68,6 +104,7 @@ const switchSelected = (event: KeyboardEvent) => {
     :href="selected.url"
     :test-item-id="`big-card-${props.bookmark.label}`"
     @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
     @keyup="switchSelected">
     <div class="big-card-content">
       <div class="icon-container"><img :src="props.bookmark.icon" /></div>
@@ -115,7 +152,6 @@ const switchSelected = (event: KeyboardEvent) => {
 }
 
 .label {
-  margin-top: 15px;
   font-family: monospace;
   text-decoration: none;
   color: lightgray;
