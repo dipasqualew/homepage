@@ -2,9 +2,11 @@ import { expect, test } from '@playwright/test';
 
 import { assertDefaultLayout } from './assertions.js';
 import { LayoutBuilder } from './pom/LayoutBuilder.js';
-import { getSetupLocalStorageFunc } from './utils.js';
+import { formatRoute, getSetupLocalStorageFunc } from './utils.js';
 import { Container } from '../../src/profiles.js';
+import { RouteName } from '../../src/router.js';
 import { BOOKMARKS, PROFILE_DEFAULT, PROFILE_EMPTY, PROFILE_SIMPLE } from '../fixtures/layouts.js';
+
 
 test.describe('Editor View', () => {
     test.afterEach(async ({ page }) => {
@@ -82,7 +84,8 @@ test.describe('Editor View', () => {
                 const commitButton = page.getByText('Commit');
                 await commitButton.click();
 
-                await expect(page.url()).toContain(`/layout/${currentLayout.uuid}`);
+                const expectedUrl = formatRoute(RouteName.LAYOUT, { profileUuid: currentLayout.uuid });
+                await expect(page).toHaveURL(expectedUrl);
                 await assertDefaultLayout(builder.app);
             });
 
@@ -152,7 +155,8 @@ test.describe('Editor View', () => {
                 const commitButton = page.getByText('Commit');
                 await commitButton.click();
 
-                await expect(page.url()).toContain(`/layout/${PROFILE_DEFAULT.uuid}`);
+                const expectedUrl = formatRoute(RouteName.LAYOUT, { profileUuid: PROFILE_DEFAULT.uuid });
+                await expect(page).toHaveURL(expectedUrl);
 
                 const locator = page.locator('#app');
                 await expect(locator).toContainText('chatgpt');

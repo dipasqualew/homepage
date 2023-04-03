@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-import { getSetupLocalStorageFunc } from './utils.js';
+import { PageToolbarPOM } from './pom/PageToolbarPOM.js';
+import { formatRoute, getSetupLocalStorageFunc } from './utils.js';
+import { RouteName } from '../../src/router.js';
 import { PROFILE_DEFAULT, PROFILE_SIMPLE } from '../fixtures/layouts.js';
 
 test.describe('Toolbar', () => {
@@ -14,8 +16,6 @@ test.describe('Toolbar', () => {
     });
 
     test.describe('with stored profiles', () => {
-        const url = '/';
-
         const setupLocalStorage = getSetupLocalStorageFunc({
             'layout-profiles': JSON.stringify({
                 [PROFILE_DEFAULT.uuid]: PROFILE_DEFAULT,
@@ -32,18 +32,61 @@ test.describe('Toolbar', () => {
         });
 
         test('renders a clickable list of profiles', async ({ page }) => {
-            await page.goto(url);
+            const toolbar = new PageToolbarPOM(page);
+            await toolbar.setup();
 
-            const locator = page.locator('a');
+            const chips = await toolbar.getAllProfileChips();
+            await expect(chips).toHaveCount(2);
 
-            const links = await locator.all();
-            await expect(links).toHaveLength(2);
+            const chip = chips.first().getByText(`Profile: ${PROFILE_DEFAULT.name}`);
 
-            const link = links[0];
-            await expect(link).toContainText(PROFILE_DEFAULT.name);
+            await chip.click();
 
-            const href = await link.getAttribute('href');
-            await expect(href).toContain(PROFILE_DEFAULT.uuid);
+            const expectedUrl = formatRoute(RouteName.LAYOUT, { profileUuid: PROFILE_DEFAULT.uuid });
+            await expect(page).toHaveURL(expectedUrl);
+        });
+
+        test('renders a button to edit a layout', async ({ page }) => {
+            const toolbar = new PageToolbarPOM(page);
+            await toolbar.setup();
+
+            const chip = toolbar.getProfileChip(PROFILE_DEFAULT.uuid);
+            const editButton = chip.getByRole('link', { name: 'Edit' });
+            await expect(editButton).toBeVisible();
+
+            await editButton.click();
+
+            const expectedUrl = formatRoute(RouteName.PROFILE_EDITOR__EXISTING, { profileUuid: PROFILE_DEFAULT.uuid });
+            await expect(page).toHaveURL(expectedUrl);
+        });
+
+        test('renders a button to delete a layout', async ({ page }) => {
+            const toolbar = new PageToolbarPOM(page);
+            await toolbar.setup();
+
+            const chip = toolbar.getProfileChip(PROFILE_DEFAULT.uuid);
+            const deleteButton = chip.getByText('Delete');
+            await expect(deleteButton).toBeVisible();
+
+            await deleteButton.click();
+
+            await expect(toolbar.getProfileChip(PROFILE_DEFAULT.uuid)).toHaveCount(0);
+
+            const expectedUrl = formatRoute(RouteName.LAYOUT, { profileUuid: PROFILE_DEFAULT.uuid });
+            await page.goto(expectedUrl);
+            await expect(toolbar.app).toContainText('404');
+        });
+
+        test('renders a clickable button to create a new profile', async ({ page }) => {
+            await page.goto('/404');
+
+            const newProfileButton = await page.getByText('New Profile');
+            await expect(newProfileButton).toBeVisible();
+
+            await newProfileButton.click();
+
+            const expectedUrl = formatRoute(RouteName.PROFILE_EDITOR__NEW, {});
+            await expect(page).toHaveURL(expectedUrl);
         });
 
     });

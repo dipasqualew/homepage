@@ -1,18 +1,24 @@
 <script setup lang="ts">
 import { computed, onBeforeMount, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 import ContainerRoot from '../components/ContainerRoot.vue';
 import { useMeta, useStorage } from '../hooks';
 import { Layout } from '../profiles';
 import { createProfile, loadProfile, saveProfile } from '../profiles';
+import { RouteName } from '../router';
+
+interface Props {
+    profileUuid?: string | null;
+}
 
 const meta = useMeta();
-const route = useRoute();
 const router = useRouter();
 const storage = useStorage();
 
-const routeProfileUuid = (route.params.profile as string) || null;
+const props = withDefaults(defineProps<Props>(), {
+    profileUuid: null,
+});
 
 const profile = ref<Layout | null>(null);
 
@@ -39,7 +45,7 @@ const commitProfile = () => {
 
     saveProfile(profile.value, storage);
 
-    router.push({ name: 'Layout', params: { layout: profile.value.uuid } });
+    router.push({ name: RouteName.LAYOUT, params: { profileUuid: profile.value.uuid } });
 };
 
 const updateProfile = (layout: Layout) => {
@@ -50,9 +56,9 @@ const updateProfile = (layout: Layout) => {
 };
 
 onBeforeMount(() => {
-    if (routeProfileUuid) {
+    if (props.profileUuid) {
         try {
-            const existingProfile = loadProfile(routeProfileUuid, storage);
+            const existingProfile = loadProfile(props.profileUuid, storage);
             profile.value = existingProfile;
             meta.title.value = `Edit Profile: ${profile.value.name}`;
             rawLayout.value = JSON.stringify(profile.value, null, 2);

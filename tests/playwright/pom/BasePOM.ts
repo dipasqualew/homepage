@@ -17,7 +17,7 @@ export class BasePOM {
 
     async selectOption(selectTestId: string, optionLabel: string, locator?: Locator) {
         const _locator = locator || this.page;
-        const select = _locator.locator(`[data-test-id="${selectTestId}"]`);
+        const select = _locator.getByTestId(selectTestId);
         await select.click();
 
         const option = _locator.getByText(optionLabel);

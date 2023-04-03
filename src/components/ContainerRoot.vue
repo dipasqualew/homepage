@@ -151,7 +151,7 @@ const onProfileAction = (context: { action: string, bookmark: Favourite }) => {
 </script>
 <template>
     <div
-        data-test-id="layout-visual-editor"
+        data-testid="layout-visual-editor"
         :data-item-uuid="props.layout.uuid"
         @click="onClick"
         @mouseover="onHover"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 
+import PageToolbar from './components/page/PageToolbar.vue';
 import { useMeta } from './hooks';
 import { storageKey } from './injectionKeys';
 import { Layout, getLayoutProfiles } from './profiles';
@@ -20,18 +21,7 @@ const meta = useMeta();
 </script>
 <template>
   <div class="root">
-    <v-toolbar density="comfortable" color="black" class="toolbar">
-      <h1 class="text-h6">{{  meta.title.value }}</h1>
-      <v-spacer></v-spacer>
-      <router-link
-        v-for="existingProfile in allProfiles"
-        :key="existingProfile.uuid"
-        :to="{ name: 'Layout', params: { layout: existingProfile.uuid }}">
-        <v-chip variant="elevated" color="gray" class="cursor-pointer">
-          Profile: {{  existingProfile.name }}
-        </v-chip>
-      </router-link>
-    </v-toolbar>
+    <PageToolbar :allProfiles="allProfiles" :meta="meta" />
     <router-view class="router-view" />
   </div>
 </template>

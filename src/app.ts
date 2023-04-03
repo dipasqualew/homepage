@@ -6,7 +6,7 @@ import * as directives from 'vuetify/directives';
 
 import AppRoot from './AppRoot.vue';
 import { storageKey } from './injectionKeys';
-import { router } from './router';
+import { setupRouter } from './router';
 
 
 /**
@@ -26,6 +26,7 @@ export interface AppDependencies {
  */
 export const setupApp = (deps: AppDependencies): VueApp<Element> => {
     const app = createApp(AppRoot);
+    const router = setupRouter();
 
     const vuetify = createVuetify({
         components,

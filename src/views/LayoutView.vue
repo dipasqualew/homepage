@@ -1,23 +1,31 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from 'vue';
-import { useRoute } from 'vue-router';
 
 import ContainerRoot from '../components/ContainerRoot.vue';
 import { useMeta, useStorage } from '../hooks';
 import { Layout, loadProfile } from '../profiles';
 
-const route = useRoute();
+interface Props {
+    profileUuid?: string | null;
+}
+
 const storage = useStorage();
 const meta = useMeta();
 
-const profileUuid = route.params.layout as string;
+const props = withDefaults(defineProps<Props>(), {
+    profileUuid: null,
+});
 
 const profile = ref<Layout | null>(null);
 
 
 onBeforeMount(() => {
     try {
-        profile.value = loadProfile(profileUuid, storage);
+        if (!props.profileUuid) {
+            throw new Error('Profile not loaded.');
+        }
+
+        profile.value = loadProfile(props.profileUuid, storage);
         meta.title.value = `Layout Profile: ${profile.value?.name ?? '404'}`;
     } catch (error) {
         meta.title.value = 'Layout Profile: 404';
