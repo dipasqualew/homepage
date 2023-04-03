@@ -141,17 +141,20 @@ const onMouseWheel = (event: WheelEvent) => {
     @keyup="switchSelected">
     <div class="big-card-content">
       <div class="icon-container"><img :src="props.bookmark.icon" /></div>
-      <div v-for="row in props.bookmark.rows" :key="row.title">
-        <div class="label" :class="row.url === selected.url ? 'selected' : ''">
-          <span v-if="row.url === selected.url">→ </span>
-          <span v-else>&nbsp;&nbsp;</span>
-          <span>{{ props.bookmark.label }}</span>
-          <span v-if="row.title">:{{  row.title }}</span>
+      <div class="label-container">
+        <div v-for="row in props.bookmark.rows" :key="row.title">
+          <div class="label" :class="row.url === selected.url ? 'selected' : ''">
+            <span v-if="row.url === selected.url">→ </span>
+            <span v-else>&nbsp;&nbsp;</span>
+            <span>{{ props.bookmark.label }}</span>
+            <span v-if="row.title">:{{  row.title }}</span>
+          </div>
         </div>
       </div>
     </div>
   </component>
 </template>
+
 
 <style>
 .big-card {
@@ -178,10 +181,31 @@ const onMouseWheel = (event: WheelEvent) => {
 }
 
 .big-card-content {
-  text-align: center;
-  margin: auto;
-  font-size: 1.5em;
-  width: 100%
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.icon-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+.icon-container img {
+  width: 30%;
+  object-fit: contain;
+}
+
+.label-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .label {
@@ -192,15 +216,6 @@ const onMouseWheel = (event: WheelEvent) => {
 
 .label.selected {
   color: #6797da;
-}
-
-.icon-container {
-  width: 20%;
-  margin: auto;
-}
-.icon-container img {
-  width: 100%;
-  object-fit: contain;
 }
 </style>
 
