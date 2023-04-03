@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 export interface FavouriteRow {
     title?: string;
     url: string;
+    default?: boolean;
 }
 
 export interface Favourite {
