@@ -40,7 +40,12 @@ export const BOOKMARKS: Record<BookmarkKeys, Favourite> = {
         icon: 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg',
         rows: [
             {
+                title: '4.0',
                 url: 'https://chat.openai.com/chat?model=gpt-4',
+            },
+            {
+                title: '3.5',
+                url: 'https://chat.openai.com/chat?model=text-davinci-002-render-sha',
             }
         ]
     },

@@ -55,6 +55,19 @@ const onMouseEnter = (event: MouseEvent) => {
 };
 
 /**
+ * Prevent the card from being clicked when not in edit mode
+ *
+ * @param event
+ */
+const onMouseDown = (event: MouseEvent) => {
+    if (props.editMode) {
+        return;
+    }
+
+    event.preventDefault();
+};
+
+/**
  * Blur the card when the mouse leaves it.
  *
  * This is necessary to avoid focus animation
@@ -95,6 +108,24 @@ const switchSelected = (event: KeyboardEvent) => {
     }
 };
 
+const onMouseWheel = (event: WheelEvent) => {
+    if (props.editMode || props.bookmark.rows.length <= 1) {
+        return;
+    }
+
+    if (event.deltaY < 0) {
+        if(selectedIndex.value > 0) {
+            selectedIndex.value--;
+        }
+    }
+
+    if (event.deltaY > 0) {
+        if(selectedIndex.value < props.bookmark.rows.length - 1) {
+            selectedIndex.value++;
+        }
+    }
+};
+
 </script>
 
 <template>
@@ -104,7 +135,9 @@ const switchSelected = (event: KeyboardEvent) => {
     :href="selected.url"
     :test-item-id="`big-card-${props.bookmark.label}`"
     @mouseenter="onMouseEnter"
+    @mousedown="onMouseDown"
     @mouseleave="onMouseLeave"
+    @mousewheel="onMouseWheel"
     @keyup="switchSelected">
     <div class="big-card-content">
       <div class="icon-container"><img :src="props.bookmark.icon" /></div>

@@ -71,7 +71,22 @@ test.describe('Layout View', () => {
             await expect(locator).toContainText('→ gmail:home');
         });
 
-        for (const [up, down] of [['ArrowUp', 'ArrowDown'], ['w', 's']]) {
+        const upAndDownMovements = [
+            [
+                (page) => page.keyboard.press('ArrowUp'),
+                (page) => page.keyboard.press('ArrowDown'),
+            ],
+            [
+                (page) => page.keyboard.press('w'),
+                (page) => page.keyboard.press('s'),
+            ],
+            [
+                (page) => page.mouse.wheel(0, -180),
+                (page) => page.mouse.wheel(0, 180),
+            ]
+        ];
+
+        for (const [up, down] of upAndDownMovements) {
             test(`switches to another selected row using '${up}' and '${down}'`, async ({ page }) => {
                 await page.goto(url);
 
@@ -79,19 +94,19 @@ test.describe('Layout View', () => {
 
                 await locator.hover();
 
-                await page.keyboard.press(up);
+                await up(page);
                 await expect(locator).toHaveAttribute('href', BOOKMARKS.gmail.rows[0].url);
                 await expect(locator).toContainText('→ gmail:home');
 
-                await page.keyboard.press(down);
+                await down(page);
                 await expect(locator).toHaveAttribute('href', BOOKMARKS.gmail.rows[1].url);
                 await expect(locator).toContainText('→ gmail:work');
 
-                await page.keyboard.press(down);
+                await down(page);
                 await expect(locator).toHaveAttribute('href', BOOKMARKS.gmail.rows[1].url);
                 await expect(locator).toContainText('→ gmail:work');
 
-                await page.keyboard.press(up);
+                await up(page);
                 await expect(locator).toHaveAttribute('href', BOOKMARKS.gmail.rows[0].url);
                 await expect(locator).toContainText('→ gmail:home');
             });
