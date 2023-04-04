@@ -21,7 +21,7 @@ test.describe('Editor View', () => {
 
             const locator = page.locator('h1');
 
-            await expect(locator).toContainText('Create a new Profile Profile');
+            await expect(locator).toContainText('Create a new Profile');
         });
 
         test.describe('create profile workflow', () => {
@@ -118,7 +118,7 @@ test.describe('Editor View', () => {
                 await page.goto(url);
 
                 const locator = page.locator('#app');
-                const expected = 'Profile Profile not found!';
+                const expected = 'Profile not found!';
 
                 await expect(locator).toContainText(expected);
             });

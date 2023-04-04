@@ -58,7 +58,7 @@ const ACTION_REMOVE_BOOKMARK = {
 onBeforeMount(() => {
     if (props.container?.type === 'big-card') {
         // populate bookmar.value with a deep clone of the given bookmark
-        bookmark.value = JSON.parse(JSON.stringify(props.container.Bookmark));
+        bookmark.value = JSON.parse(JSON.stringify(props.container.bookmark));
     }
 });
 

@@ -84,7 +84,7 @@ export const PROFILE_SIMPLE: Profile = {
             {
                 uuid: 'fe1114a7-c78e-4f96-a776-5412714c7b9d',
                 type: 'big-card',
-                Bookmark: BOOKMARKS.chatgpt
+                bookmark: BOOKMARKS.chatgpt
             }
         ]
     },
@@ -111,7 +111,7 @@ export const PROFILE_DEFAULT: Profile = {
                             {
                                 uuid: 'd2666124-820a-4325-a4be-e0eaf48cfddb',
                                 type: 'big-card',
-                                Bookmark: BOOKMARKS.gmail
+                                bookmark: BOOKMARKS.gmail
                             }
                         ]
                     },
@@ -123,7 +123,7 @@ export const PROFILE_DEFAULT: Profile = {
                             {
                                 uuid: 'bba07d7a-cba9-45c1-a1ea-801a1a1a5169',
                                 type: 'big-card',
-                                Bookmark: BOOKMARKS.gdrive
+                                bookmark: BOOKMARKS.gdrive
                             }
                         ]
                     },
@@ -135,7 +135,7 @@ export const PROFILE_DEFAULT: Profile = {
                             {
                                 uuid: '53467b43-5220-4609-b3b5-33c50d0afc7f',
                                 type: 'big-card',
-                                Bookmark: BOOKMARKS.gcalendar
+                                bookmark: BOOKMARKS.gcalendar
                             }
                         ]
                     }
@@ -149,7 +149,7 @@ export const PROFILE_DEFAULT: Profile = {
                     {
                         uuid: 'fe1114a7-c78e-4f96-a776-5412714c7b9d',
                         type: 'big-card',
-                        Bookmark: BOOKMARKS.chatgpt
+                        bookmark: BOOKMARKS.chatgpt
                     }
                 ]
             },
@@ -161,7 +161,7 @@ export const PROFILE_DEFAULT: Profile = {
                     {
                         uuid: '590fafc8-21e8-4e75-aebb-07e4dc8706fa',
                         type: 'big-card',
-                        Bookmark: BOOKMARKS.onepassword
+                        bookmark: BOOKMARKS.onepassword
                     }
                 ]
             }

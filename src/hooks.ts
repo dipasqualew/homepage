@@ -89,10 +89,10 @@ export const errorHandler = (error: unknown, _vm: ComponentPublicInstance | null
         pushFeedback(error.message, 'red');
 
         if (error.critical) {
-            throw error;
+            console.error(error);
         }
     } else {
-        throw error;
+        console.error(error);
     }
 };
 

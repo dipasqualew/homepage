@@ -37,7 +37,7 @@ const style = computed(() => {
     <BigCard
         v-if="props.container.type === 'big-card'"
         :style="style"
-        :bookmark="props.container.Bookmark"
+        :bookmark="props.container.bookmark"
         :edit-mode="editMode"
         :data-item-uuid="props.container.uuid"
     />

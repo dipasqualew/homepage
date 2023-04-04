@@ -98,7 +98,7 @@ const onProfileAction = (context: { action: string, bookmark: Bookmark }) => {
         }
 
         if (context.action === 'edit-bookmark') {
-            target.container.Bookmark = context.bookmark;
+            target.container.bookmark = context.bookmark;
         }
 
         if (context.action === 'remove-bookmark') {
@@ -138,7 +138,7 @@ const onProfileAction = (context: { action: string, bookmark: Bookmark }) => {
             target.container.children.push({
                 uuid: uuidv4(),
                 type: 'big-card',
-                Bookmark: context.bookmark,
+                bookmark: context.bookmark,
             });
         }
     }

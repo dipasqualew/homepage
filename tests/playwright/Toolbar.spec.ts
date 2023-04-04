@@ -5,6 +5,7 @@ import { formatRoute, getSetupLocalStorageFunc } from './utils.js';
 import { RouteName } from '../../src/router.js';
 import { PROFILE_DEFAULT, PROFILE_SIMPLE } from '../fixtures/profiles.js';
 
+
 test.describe('Toolbar', () => {
     test.describe('without stored profiles', () => {
         test('doesn\'t render any link', async ({ page }) => {

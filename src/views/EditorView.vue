@@ -75,7 +75,7 @@ onBeforeMount(() => {
         }
     } else {
         profile.value = createProfile({});
-        meta.title.value = 'Create a new Profile Profile';
+        meta.title.value = 'Create a new Profile';
     }
 });
 
@@ -114,7 +114,7 @@ onBeforeMount(() => {
     </div>
     <div v-else>
         <v-alert type="error" prominent>
-            Profile Profile not found!
+            Profile not found!
         </v-alert>
     </div>
 </template>

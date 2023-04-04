@@ -23,7 +23,7 @@ export type BlockOptions = BigCardBlock | Container;
 
 export interface BigCardBlock extends Block {
     type: 'big-card';
-    Bookmark: Bookmark;
+    bookmark: Bookmark;
 }
 
 export interface Container extends Block {

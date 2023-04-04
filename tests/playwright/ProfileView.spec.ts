@@ -29,7 +29,7 @@ test.describe('Profile View', () => {
 
             const locator = page.locator('h1');
 
-            await expect(locator).toContainText('Profile Profile: 404');
+            await expect(locator).toContainText('Profile: 404');
 
         });
 
@@ -38,7 +38,7 @@ test.describe('Profile View', () => {
 
             const locator = page.locator('#app');
 
-            await expect(locator).toContainText('Profile Profile not found!');
+            await expect(locator).toContainText('Profile not found!');
         });
     });
 
@@ -50,7 +50,7 @@ test.describe('Profile View', () => {
 
             const locator = page.locator('h1');
 
-            await expect(locator).toContainText(`Profile Profile: ${PROFILE_DEFAULT.name}`);
+            await expect(locator).toContainText(`Profile: ${PROFILE_DEFAULT.name}`);
         });
 
         test('renders the profile in storage', async ({ page }) => {

@@ -26,9 +26,9 @@ onBeforeMount(() => {
         }
 
         profile.value = loadProfile(props.profileUuid, storage);
-        meta.title.value = `Profile Profile: ${profile.value?.name ?? '404'}`;
+        meta.title.value = `Profile: ${profile.value?.name ?? '404'}`;
     } catch (error) {
-        meta.title.value = 'Profile Profile: 404';
+        meta.title.value = 'Profile: 404';
         return;
     }
 });
@@ -39,5 +39,5 @@ onBeforeMount(() => {
     <div class="fullpage" v-if="profile">
         <ContainerRoot :profile="profile" />
     </div>
-    <div v-else class="text-h3 text-center pt-5">Profile Profile not found!</div>
+    <div v-else class="text-h3 text-center pt-5">Profile not found!</div>
 </template>
