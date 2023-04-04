@@ -3,6 +3,7 @@ import { computed, onBeforeMount, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import ContainerRoot from '../components/ContainerRoot.vue';
+import { FeedbackError } from '../errors';
 import { useMeta, useStorage } from '../hooks';
 import { Layout } from '../profiles';
 import { createProfile, loadProfile, saveProfile } from '../profiles';
@@ -42,6 +43,14 @@ const commitProfile = () => {
     if (!profile.value) {
         throw new Error('Profile not loaded.');
     }
+
+    // Ignore all new profiles
+    if (props.profileUuid)
+
+        // If the profile is not new, ensure the UUID has not been changed
+        if( props.profileUuid !== profile.value.uuid) {
+            throw new FeedbackError('Profile UUID cannot be changed.');
+        }
 
     saveProfile(profile.value, storage);
 

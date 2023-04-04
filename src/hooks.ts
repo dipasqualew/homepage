@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { inject, ref } from 'vue';
+import type { ComponentPublicInstance } from 'vue';
 
+import { FeedbackError } from './errors';
 import { storageKey } from './injectionKeys';
 
 
@@ -73,6 +75,25 @@ export const useFeedback = () => {
         pushFeedback,
         removeFeedback,
     };
+};
+
+/**
+ * Error handler to be passed to the Vue app
+ *
+ * @param error
+ * @param _vm
+ * @param _info
+ */
+export const errorHandler = (error: unknown, _vm: ComponentPublicInstance | null, _info: string) => {
+    if (error instanceof FeedbackError) {
+        pushFeedback(error.message, 'red');
+
+        if (error.critical) {
+            throw error;
+        }
+    } else {
+        throw error;
+    }
 };
 
 /**

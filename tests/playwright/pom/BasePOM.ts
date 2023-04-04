@@ -10,7 +10,7 @@ export class BasePOM {
         this.path = path;
     }
 
-    async setup() {
+    async setup(): Promise<void> {
         await this.page.setViewportSize({ width: 1920, height: 1080 });
         await this.page.goto(this.path);
     }
@@ -24,7 +24,19 @@ export class BasePOM {
         await option.click();
     }
 
-    get app() {
+    get app(): Locator {
         return this.page.locator('#app');
+    }
+
+    getUserFeedbackContainer(): Locator {
+        return this.page.getByTestId('user-feedback-container');
+    }
+
+    getUserFeedbackByUuid(uuid: string): Locator {
+        return this.getUserFeedbackContainer().getByTestId(`user-feedback-"${uuid}`);
+    }
+
+    getUserFeedbackByText(text: string): Locator {
+        return this.getUserFeedbackContainer().getByText(text);
     }
 }

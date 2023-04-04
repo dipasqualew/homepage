@@ -81,8 +81,7 @@ test.describe('Editor View', () => {
 
                 await assertDefaultLayout(builder.app);
 
-                const commitButton = page.getByText('Commit');
-                await commitButton.click();
+                await builder.commitButton.click();
 
                 const expectedUrl = formatRoute(RouteName.LAYOUT, { profileUuid: currentLayout.uuid });
                 await expect(page).toHaveURL(expectedUrl);
@@ -165,6 +164,20 @@ test.describe('Editor View', () => {
 
                 // Test unchanged fields are retained, e.g. the title for the second link
                 await expect(builder.visualEditor).toContainText('OPEN AI:3.5');
+            });
+
+            test('throws a user feedback error when trying to edit the profile uuid', async ({ page }) => {
+                const builder = new LayoutBuilder(page);
+
+                await builder.codeEditor.fill(JSON.stringify({
+                    ...PROFILE_DEFAULT,
+                    uuid: '0a85b9a2-e124-4359-988c-3523b2573a1d',
+                }));
+
+                await builder.commitButton.click();
+
+                const feedback = builder.getUserFeedbackByText('Profile UUID cannot be changed');
+                await expect(feedback).toBeVisible();
             });
 
             test('editing a bookmark without confirming doesn\'t change the layout', async ({ page }) => {
