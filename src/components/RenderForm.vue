@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import { computed, onBeforeMount, ref } from 'vue';
 
-import { BigCardBlock, Bookmark, Container } from '../profiles';
+import { BlockOptions, Bookmark } from '../profiles';
 
 const emit = defineEmits(['profileAction', 'close']);
 
-const props = defineProps<{ container: Container | BigCardBlock | null }>();
+interface ContainerPath<T extends BlockOptions = BlockOptions> {
+    container: T,
+    position: string;
+}
+
+interface Props {
+    path: ContainerPath[];
+}
+
+const props = defineProps<Props>();
 const action = ref('');
 
 const bookmark = ref<Bookmark>({
@@ -17,6 +26,13 @@ const bookmark = ref<Bookmark>({
             url: '',
         }
     ],
+});
+
+const target = computed(() => props.path[props.path.length - 1]);
+const block = computed(() => target.value.container);
+
+const breadcrumb = computed(() => {
+    return props.path.map((item) => item.position).join(' > ');
 });
 
 const MAKE_ROW = {
@@ -56,14 +72,14 @@ const ACTION_REMOVE_BOOKMARK = {
 };
 
 onBeforeMount(() => {
-    if (props.container?.type === 'big-card') {
+    if (block.value.type === 'big-card') {
         // populate bookmar.value with a deep clone of the given bookmark
-        bookmark.value = JSON.parse(JSON.stringify(props.container.bookmark));
+        bookmark.value = JSON.parse(JSON.stringify(block.value.bookmark));
     }
 });
 
 const actions = computed(() => {
-    if (props.container?.type === 'big-card') {
+    if (block.value.type === 'big-card') {
         return [ACTION_EDIT_BOOKMARK, ACTION_REMOVE_BOOKMARK];
     }
 
@@ -95,7 +111,7 @@ const removeRow = (index: number) => {
 <v-sheet width="100%" class="render-form">
     <v-container>
         <v-row>
-            Editing {{ container?.type }} - {{ container?.uuid }}
+            Editing {{ breadcrumb }}
         </v-row>
         <v-row>
             <v-col>

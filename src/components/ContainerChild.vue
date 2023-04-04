@@ -2,15 +2,34 @@
 import { computed } from 'vue';
 
 import BigCard from './BigCard.vue';
-import { BlockOptions } from '../profiles';
+import { BlockOptions, Container } from '../profiles';
 
 interface Props {
     container: BlockOptions;
     currentUuid: string;
+    name: string;
     editMode?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), { editMode: false, prefix: 'root' });
+const props = withDefaults(defineProps<Props>(), { editMode: false });
+
+const classes = computed(() => {
+    if (props.container.type === 'big-card') {
+        return '';
+    }
+
+    return props.container.direction;
+});
+
+const getChildName = (child: BlockOptions, index: number) => {
+    const container = props.container as Container;
+
+    if (child.type === 'big-card') {
+        return `${props.name}-bookmark:${child.bookmark.label}`;
+    }
+
+    return `${props.name}-${container.direction}:${index}`;
+};
 
 const style = computed(() => {
     if (props.editMode) {
@@ -34,19 +53,23 @@ const style = computed(() => {
 
 </script>
 <template>
-    <BigCard
-        v-if="props.container.type === 'big-card'"
+    <div
+        :class="classes"
         :style="style"
-        :bookmark="props.container.bookmark"
-        :edit-mode="editMode"
-        :data-item-uuid="props.container.uuid"
-    />
-    <div v-else class="container child" :class="props.container.direction" :style="style" :data-item-uuid="props.container.uuid">
+        :data-testid="`container-child:${props.name}`"
+        :data-item-uuid="props.container.uuid">
+        <BigCard
+            v-if="props.container.type === 'big-card'"
+            :bookmark="props.container.bookmark"
+            :edit-mode="editMode"
+        />
         <ContainerChild
+            v-else
             v-for="child, i in props.container.children" :key="i"
             :container="child"
             :current-uuid="currentUuid"
             :edit-mode="editMode"
+            :name="getChildName(child, i)"
         />
     </div>
 </template>
