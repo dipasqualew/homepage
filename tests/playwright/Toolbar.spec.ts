@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { PageToolbarPOM } from './pom/PageToolbarPOM.js';
 import { formatRoute, getSetupLocalStorageFunc } from './utils.js';
 import { RouteName } from '../../src/router.js';
-import { PROFILE_DEFAULT, PROFILE_SIMPLE } from '../fixtures/layouts.js';
+import { PROFILE_DEFAULT, PROFILE_SIMPLE } from '../fixtures/profiles.js';
 
 test.describe('Toolbar', () => {
     test.describe('without stored profiles', () => {
@@ -42,11 +42,11 @@ test.describe('Toolbar', () => {
 
             await chip.click();
 
-            const expectedUrl = formatRoute(RouteName.LAYOUT, { profileUuid: PROFILE_DEFAULT.uuid });
+            const expectedUrl = formatRoute(RouteName.PROFILE, { profileUuid: PROFILE_DEFAULT.uuid });
             await expect(page).toHaveURL(expectedUrl);
         });
 
-        test('renders a button to edit a layout', async ({ page }) => {
+        test('renders a button to edit a profile', async ({ page }) => {
             const toolbar = new PageToolbarPOM(page);
             await toolbar.setup();
 
@@ -60,7 +60,7 @@ test.describe('Toolbar', () => {
             await expect(page).toHaveURL(expectedUrl);
         });
 
-        test('renders a button to delete a layout', async ({ page }) => {
+        test('renders a button to delete a profile', async ({ page }) => {
             const toolbar = new PageToolbarPOM(page);
             await toolbar.setup();
 
@@ -72,7 +72,7 @@ test.describe('Toolbar', () => {
 
             await expect(toolbar.getProfileChip(PROFILE_DEFAULT.uuid)).toHaveCount(0);
 
-            const expectedUrl = formatRoute(RouteName.LAYOUT, { profileUuid: PROFILE_DEFAULT.uuid });
+            const expectedUrl = formatRoute(RouteName.PROFILE, { profileUuid: PROFILE_DEFAULT.uuid });
             await page.goto(expectedUrl);
             await expect(toolbar.app).toContainText('404');
         });

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, onBeforeMount, ref } from 'vue';
 
-import { Favourite } from '../profiles';
+import { Bookmark } from '../profiles';
 
 interface Props {
-  bookmark: Favourite
+  bookmark: Bookmark
   editMode: boolean;
 }
 

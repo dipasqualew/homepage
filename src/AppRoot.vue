@@ -5,14 +5,14 @@ import PageToolbar from './components/page/PageToolbar.vue';
 import UserFeedback from './components/page/UserFeedback.vue';
 import { useMeta } from './hooks';
 import { storageKey } from './injectionKeys';
-import { Layout, getLayoutProfiles } from './profiles';
+import { Profile, getProfiles } from './profiles';
 
 const storage = inject(storageKey, ()  => localStorage, true);
 
 const allProfiles = computed(() => {
-    const layoutProfiles = getLayoutProfiles(storage);
+    const profiles = getProfiles(storage);
 
-    const existingProfiles = Object.values(layoutProfiles.value).filter((item) => !!item) as Layout[];
+    const existingProfiles = Object.values(profiles.value).filter((item) => !!item) as Profile[];
 
     return existingProfiles;
 });
