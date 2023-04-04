@@ -35,20 +35,53 @@ jobs:
       - name: Build Project Artifacts
         run: bun x vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
+      - name: Calculate build size and display
+        run: |
+          SIZE=$(du -sk dist | cut -f1)
+          echo "# Build Summary" >>  $GITHUB_STEP_SUMMARY
+          echo "Total build size: $SIZE KB" >>  $GITHUB_STEP_SUMMARY
+          echo "## Individual file sizes" >> $GITHUB_STEP_SUMMARY
+          echo "|Path|Size|" >> $GITHUB_STEP_SUMMARY
+          echo "|-|-|" >> $GITHUB_STEP_SUMMARY
+          cd dist && find . -type f -printf "| %-40p | %-5k KB |\n" >> $GITHUB_STEP_SUMMARY
+          echo "::notice title=Build Size::Total build size: $SIZE KB"
+
+        id: build_size
+
       - name: Deploy Project Artifacts to Vercel
         id: deploy-preview
         run: |
           bun x vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > vercel-domain.txt
           echo "VERCEL_DEPLOYMENT_URL=$(cat vercel-domain.txt)" >> $GITHUB_OUTPUT
-          echo "Preview URL: $(cat vercel-domain.txt)" >> $GITHUB_STEP_SUMMARY
+          echo "# Preview URL" >> $GITHUB_STEP_SUMMARY
+          echo "$(cat vercel-domain.txt)" >> $GITHUB_STEP_SUMMARY
+          echo "::notice title=Preview URL::$(cat vercel-domain.txt)"
+
+    outputs:
+      VERCEL_DEPLOYMENT_URL: ${{ steps.deploy-preview.outputs.VERCEL_DEPLOYMENT_URL }}
+
+  test:
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
 
       - name: Setup Playwright
-        run: npx playwright install --with-deps chromium
+        run: bun x playwright install --with-deps chromium
 
       - name: Run Playwright tests
         run: bun run test:playwright
         env:
-          PLAYWRIGHT_BASE_URL: ${{ steps.deploy-preview.outputs.VERCEL_DEPLOYMENT_URL }}
+          PLAYWRIGHT_BASE_URL: ${{ needs.build.outputs.VERCEL_DEPLOYMENT_URL }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -60,7 +93,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    needs: build
+    needs: test
 
     if: github.ref == 'refs/heads/main'
 
