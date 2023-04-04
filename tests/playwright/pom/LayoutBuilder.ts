@@ -37,6 +37,7 @@ export class LayoutBuilder extends BasePOM {
     async performActionOnChild(
         childUuid: string,
         action: string,
+        confirm = true,
         additionalSteps?: (page: Page) => Promise<void>,
     ): Promise<void> {
         const child = await this.getChild(childUuid);
@@ -48,15 +49,21 @@ export class LayoutBuilder extends BasePOM {
             await additionalSteps(this.page);
         }
 
-        const confirm = this.page.getByText('Confirm');
-        await confirm.click();
+        if (confirm) {
+            const confirmButton = this.page.getByText('Confirm');
+            await confirmButton.click();
+        } else {
+            const cancelButton = this.page.getByText('Cancel');
+            await cancelButton.click();
+        }
     }
 
     async addBookmarkOnContainer(
         containerUuid: string,
         bookmark: Favourite,
+        confirm = true,
     ): Promise<void> {
-        await this.performActionOnChild(containerUuid, 'Add bookmark', async (page) => {
+        await this.performActionOnChild(containerUuid, 'Add bookmark', confirm, async (page) => {
             await page.getByLabel('Label').fill(bookmark.label);
             await page.getByLabel('Icon').fill(bookmark.icon);
 
@@ -70,6 +77,28 @@ export class LayoutBuilder extends BasePOM {
                 await page.getByLabel('URL').nth(index).fill(row.url);
 
                 index++;
+            }
+        });
+    }
+
+    async editBookmarkOnContainer(
+        containerUuid: string,
+        actions: Array<{
+            index?: number,
+            field: string,
+            value: string
+        }>,
+        confirm = true,
+    ): Promise<void> {
+        await this.performActionOnChild(containerUuid, 'Edit bookmark', confirm, async (page) => {
+            for (const action of actions) {
+                let locator = page.getByLabel(action.field);
+
+                if (action.index !== undefined) {
+                    locator = locator.nth(action.index);
+                }
+
+                await locator.fill(action.value);
             }
         });
     }
