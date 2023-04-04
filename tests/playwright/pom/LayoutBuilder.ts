@@ -12,6 +12,10 @@ export class LayoutBuilder extends BasePOM {
         return this.page.getByLabel('Layout Code');
     }
 
+    get commitButton(): Locator {
+        return this.page.getByText('Commit');
+    }
+
     get visualEditor(): Locator {
         return this.page.getByTestId('layout-visual-editor');
     }

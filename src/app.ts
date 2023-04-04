@@ -5,6 +5,7 @@ import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 
 import AppRoot from './AppRoot.vue';
+import { errorHandler } from './hooks';
 import { storageKey } from './injectionKeys';
 import { setupRouter } from './router';
 
@@ -26,6 +27,7 @@ export interface AppDependencies {
  */
 export const setupApp = (deps: AppDependencies): VueApp<Element> => {
     const app = createApp(AppRoot);
+
     const router = setupRouter();
 
     const vuetify = createVuetify({
@@ -36,6 +38,8 @@ export const setupApp = (deps: AppDependencies): VueApp<Element> => {
     app.use(router);
     app.use(vuetify);
     app.provide(storageKey, deps.storage);
+
+    app.config.errorHandler = errorHandler;
 
     return app;
 };
