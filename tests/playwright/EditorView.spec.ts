@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { assertDefaultLayout } from './assertions.js';
 import { LayoutBuilder } from './pom/LayoutBuilder.js';
 import { formatRoute, getSetupLocalStorageFunc } from './utils.js';
-import { Container } from '../../src/profiles.js';
+import { BigCardBlock, Container } from '../../src/profiles.js';
 import { RouteName } from '../../src/router.js';
 import { BOOKMARKS, PROFILE_DEFAULT, PROFILE_EMPTY, PROFILE_SIMPLE } from '../fixtures/layouts.js';
 
@@ -141,6 +141,55 @@ test.describe('Editor View', () => {
                 const locator = page.locator('#app');
                 await assertDefaultLayout(locator);
             });
+
+            test('populates edit bookmark with the existing data', async ({ page }) => {
+                const builder = new LayoutBuilder(page);
+
+                const targetBlock = (PROFILE_DEFAULT.root.children[1] as Container).children[0] as BigCardBlock;
+                const actions = [
+                    {
+                        field: 'Label',
+                        value: 'OPEN AI',
+                    },
+                    {
+                        index: 0,
+                        field: 'Title (Optional)',
+                        value: 'EDITED'
+                    }
+                ];
+
+                await builder.editBookmarkOnContainer(targetBlock.uuid, actions);
+
+                // Test changes are reflected in the editor
+                await expect(builder.visualEditor).toContainText('OPEN AI:EDITED');
+
+                // Test unchanged fields are retained, e.g. the title for the second link
+                await expect(builder.visualEditor).toContainText('OPEN AI:3.5');
+            });
+
+            test('editing a bookmark without confirming doesn\'t change the layout', async ({ page }) => {
+                const builder = new LayoutBuilder(page);
+
+                const targetBlock = (PROFILE_DEFAULT.root.children[1] as Container).children[0] as BigCardBlock;
+                const actions = [
+                    {
+                        field: 'Label',
+                        value: 'OPEN AI',
+                    },
+                    {
+                        index: 0,
+                        field: 'Title (Optional)',
+                        value: 'EDITED'
+                    }
+                ];
+
+                await builder.editBookmarkOnContainer(targetBlock.uuid, actions, false);
+                const currentLayout = await builder.getProfileValue();
+
+                // Test changes were discarded
+                await expect(currentLayout).toEqual(PROFILE_DEFAULT);
+            });
+
 
             test('updates the layout and navigates to it', async ({ page }) => {
                 const profileNameInput = page.getByLabel('Profile Name');

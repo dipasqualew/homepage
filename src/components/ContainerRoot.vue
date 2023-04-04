@@ -145,7 +145,12 @@ const onProfileAction = (context: { action: string, bookmark: Favourite }) => {
 
 
     emit('updateProfile', props.layout);
+};
 
+const onClose = () => {
+    dialog.value.active = false;
+    dialog.value.container = null;
+    dialog.value.itemUuid = '';
 };
 
 </script>
@@ -164,7 +169,10 @@ const onProfileAction = (context: { action: string, bookmark: Favourite }) => {
         />
     </div>
     <v-dialog v-model="dialog.active" width="60vw">
-        <RenderForm @profile-action="onProfileAction" :container="dialog.container" />
+        <RenderForm
+            @profile-action="onProfileAction"
+            @close="onClose"
+            :container="dialog.container" />
     </v-dialog>
 
 </template>
