@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { inject, ref } from 'vue';
 
 import { storageKey } from './injectionKeys';
@@ -13,6 +14,64 @@ const title = ref('');
 export const useMeta = () => {
     return {
         title,
+    };
+};
+
+/**
+ * Models feedback for the user
+ */
+export interface UserFeedback {
+    uuid: string;
+    color: string;
+    message: string;
+    timeout: number;
+}
+
+/**
+ * Current feedback for the user
+ */
+const userFeedbacks = ref<UserFeedback[]>([]);
+
+/**
+ * Adds a feedback message to the user
+ *
+ * @param message
+ * @param color
+ * @param timeout
+ * @returns
+ */
+const pushFeedback = (message: string, color = 'red', timeout = 2000) => {
+    const userFeedback = { uuid: uuidv4(), color, message, timeout };
+    userFeedbacks.value.push(userFeedback);
+
+    return userFeedback;
+};
+
+/**
+ * Removes a feedback message from the user
+ *
+ * @param feedbackUuid
+ */
+const removeFeedback = (feedbackUuid: string): void => {
+    const index = userFeedbacks.value.findIndex(n => n.uuid === feedbackUuid);
+
+    if (index === -1) {
+        throw new Error(`Notification ${feedbackUuid} was not found.`);
+    }
+
+    userFeedbacks.value.splice(index, 1);
+};
+
+/**
+ * Gets the feedback methods to be used
+ *
+ * @returns
+ */
+export const useFeedback = () => {
+    return {
+        userFeedbacks,
+        pushFeedback,
+        removeFeedback,
     };
 };
 

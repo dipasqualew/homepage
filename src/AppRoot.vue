@@ -2,6 +2,7 @@
 import { computed, inject } from 'vue';
 
 import PageToolbar from './components/page/PageToolbar.vue';
+import UserFeedback from './components/page/UserFeedback.vue';
 import { useMeta } from './hooks';
 import { storageKey } from './injectionKeys';
 import { Layout, getLayoutProfiles } from './profiles';
@@ -20,6 +21,7 @@ const allProfiles = computed(() => {
 const meta = useMeta();
 </script>
 <template>
+  <UserFeedback />
   <div class="root">
     <PageToolbar :allProfiles="allProfiles" :meta="meta" />
     <router-view class="router-view" />
