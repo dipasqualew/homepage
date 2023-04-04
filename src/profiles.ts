@@ -53,9 +53,10 @@ export const getProfiles = (storage: StorageLike ): RemovableRef<ProfilesMap> =>
 };
 
 export const createProfile = (props: { name?: string, root?: Container, uuid?: string | null }): Profile => {
+    const profileUuid = props.uuid || uuidv4();
     const profile: Profile = {
-        uuid: props.uuid || uuidv4(),
-        name: props.name || '',
+        uuid: profileUuid,
+        name: props.name || `Profile: ${profileUuid}`,
         root: props.root || {
             uuid: uuidv4(),
             type: 'container',
