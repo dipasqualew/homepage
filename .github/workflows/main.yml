@@ -15,6 +15,7 @@ jobs:
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v3
@@ -37,14 +38,16 @@ jobs:
 
       - name: Calculate build size and display
         run: |
-          SIZE=$(du -sk dist | cut -f1)
+          SIZE_CURRENT=$(du -sk dist | cut -f1)
+          SIZE_MAIN=$(bun .github/check.ts)
+          SIZE_DIFF=$(($SIZE_CURRENT-$SIZE_MAIN))
           echo "# Build Summary" >>  $GITHUB_STEP_SUMMARY
-          echo "Total build size: $SIZE KB" >>  $GITHUB_STEP_SUMMARY
+          echo "Total build size: $SIZE_CURRENT KB ($SIZE_DIFF KB diff)" >>  $GITHUB_STEP_SUMMARY
           echo "## Individual file sizes" >> $GITHUB_STEP_SUMMARY
           echo "|Path|Size|" >> $GITHUB_STEP_SUMMARY
           echo "|-|-|" >> $GITHUB_STEP_SUMMARY
           cd dist && find . -type f -printf "| %-40p | %-5k KB |\n" >> $GITHUB_STEP_SUMMARY
-          echo "::notice title=Build Size::Total build size: $SIZE KB"
+          echo "::notice title=Build Size::Total build size: $SIZE_CURRENT KB ($SIZE_DIFF KB diff)"
 
         id: build_size
 
