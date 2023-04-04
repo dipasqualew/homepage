@@ -161,7 +161,7 @@ const onClose = () => {
         @click="onClick"
         @mouseover="onHover"
         @mouseleave="currentUuid = ''"
-        class="profile">
+        class="container-root">
         <ContainerChild
             :container="props.profile.root"
             :current-uuid="currentUuid"
@@ -178,12 +178,9 @@ const onClose = () => {
 </template>
 
 <style scoped>
-.profile {
+.container-root {
     width: 100%;
-    height: 100%;
-}
-
-.profile > div {
-    height: 100%;
+    min-height: 100%;
+    display: flex;
 }
 </style>
