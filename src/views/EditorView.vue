@@ -85,16 +85,18 @@ onBeforeMount(() => {
     <div v-if="profile">
         <v-container>
             <v-row>
-                <v-col>
+                <v-col cols="6">
                     <div>
                         <v-text-field label="Profile Name" variant="outlined" v-model="profile.name"></v-text-field>
-                        <div class="contain-textarea">
-                            <v-textarea label="Profile Code" variant="outlined" v-model="rawProfile" id="no-profile-editor" auto-grow></v-textarea>
-                        </div>
                     </div>
                 </v-col>
+                <v-col cols="6">
+                    <v-textarea label="Profile Code" variant="outlined" v-model="rawProfile" id="no-profile-editor" class="profile-code"></v-textarea>
+                </v-col>
+            </v-row>
+            <v-row>
                 <v-col>
-                    <div v-if="parsedProfile" class="profile">
+                    <div v-if="parsedProfile" class="visual-editor">
                         <ContainerRoot :profile="parsedProfile" :edit-mode="true" @update-profile="updateProfile" />
                     </div>
                     <div v-else>
@@ -120,13 +122,12 @@ onBeforeMount(() => {
     </div>
 </template>
 
-<style scoped>
-.profile {
+<style>
+.visual-editor {
     min-height: 50vh;
+    display: flex;
 }
-.contain-textarea {
-    max-height: 50vh;
-    overflow-y: auto;
-    padding-top: 5px;
+.profile-code.v-textarea textarea {
+    height: 0px;
 }
 </style>

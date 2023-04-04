@@ -56,6 +56,7 @@ const style = computed(() => {
 .row, .column {
   display: flex;
   transition: background-color 1s;
+  width: 100%;
 }
 
 /* Column direction */
