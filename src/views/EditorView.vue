@@ -75,6 +75,7 @@ onBeforeMount(() => {
         }
     } else {
         profile.value = createProfile({});
+        rawProfile.value = JSON.stringify(profile.value, null, 2);
         meta.title.value = 'Create a new Profile';
     }
 });

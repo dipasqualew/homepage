@@ -5,7 +5,7 @@ import { ProfileBuilder } from './pom/ProfileBuilder.js';
 import { formatRoute, getSetupLocalStorageFunc } from './utils.js';
 import { BigCardBlock, Container } from '../../src/profiles.js';
 import { RouteName } from '../../src/router.js';
-import { BOOKMARKS, PROFILE_DEFAULT, PROFILE_EMPTY, PROFILE_SIMPLE } from '../fixtures/profiles.js';
+import { BOOKMARKS, PROFILE_DEFAULT, PROFILE_SIMPLE } from '../fixtures/profiles.js';
 
 
 test.describe('Editor View', () => {
@@ -42,11 +42,11 @@ test.describe('Editor View', () => {
 
             test('commits, creates a new profile and navigates to it', async ({ page }) => {
                 const builder = new ProfileBuilder(page);
-                let currentProfile = PROFILE_EMPTY;
+                await builder.setup();
+
+                let currentProfile = await builder.getProfileValue();
                 let targetBlock = currentProfile.root;
 
-                await builder.setup();
-                await builder.fillProfile(PROFILE_EMPTY);
                 await builder.performActionOnChild(targetBlock.uuid, 'Add container');
                 await builder.performActionOnChild(targetBlock.uuid, 'Add container');
                 await builder.performActionOnChild(targetBlock.uuid, 'Add container');
