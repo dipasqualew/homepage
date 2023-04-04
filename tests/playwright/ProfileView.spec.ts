@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 
-import { assertDefaultLayout } from './assertions.js';
+import { assertDefaultProfile } from './assertions.js';
 import { getSetupLocalStorageFunc } from './utils.js';
-import { BOOKMARKS, PROFILE_DEFAULT } from '../fixtures/layouts.js';
+import { BOOKMARKS, PROFILE_DEFAULT } from '../fixtures/profiles.js';
 
-test.describe('Layout View', () => {
+test.describe('Profile View', () => {
     const setupLocalStorage = getSetupLocalStorageFunc({
         'layout-profiles': JSON.stringify({
             [PROFILE_DEFAULT.uuid]: PROFILE_DEFAULT,
@@ -22,14 +22,14 @@ test.describe('Layout View', () => {
 
     test.describe('with an invalid profile uuid', () => {
         const missingProfileUuid = 'e8ff12f4-5a57-4801-a7a7-5e39f64df59b';
-        const url = `/layout/${missingProfileUuid}`;
+        const url = `/profile/${missingProfileUuid}`;
 
         test('Sets the correct meta', async ({ page }) => {
             await page.goto(url);
 
             const locator = page.locator('h1');
 
-            await expect(locator).toContainText('Layout Profile: 404');
+            await expect(locator).toContainText('Profile Profile: 404');
 
         });
 
@@ -38,28 +38,28 @@ test.describe('Layout View', () => {
 
             const locator = page.locator('#app');
 
-            await expect(locator).toContainText('Layout Profile not found!');
+            await expect(locator).toContainText('Profile Profile not found!');
         });
     });
 
     test.describe('with a valid profile uuid', () => {
-        const url = `/layout/${PROFILE_DEFAULT.uuid}`;
+        const url = `/profile/${PROFILE_DEFAULT.uuid}`;
 
         test('Sets the correct meta', async ({ page }) => {
             await page.goto(url);
 
             const locator = page.locator('h1');
 
-            await expect(locator).toContainText(`Layout Profile: ${PROFILE_DEFAULT.name}`);
+            await expect(locator).toContainText(`Profile Profile: ${PROFILE_DEFAULT.name}`);
         });
 
-        test('renders the layout in storage', async ({ page }) => {
+        test('renders the profile in storage', async ({ page }) => {
 
             await page.goto(url);
 
             const locator = page.locator('#app');
 
-            await assertDefaultLayout(locator);
+            await assertDefaultProfile(locator);
         });
 
         test('renders the default row', async ({ page }) => {

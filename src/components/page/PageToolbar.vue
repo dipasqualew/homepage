@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useStorage } from '../../hooks';
-import { Layout, deleteProfile } from '../../profiles';
+import { Profile, deleteProfile } from '../../profiles';
 import { RouteName } from '../../router';
 
 interface Props {
-    allProfiles: Layout[];
+    allProfiles: Profile[];
     meta: {
         title: {
           value: string;
@@ -15,7 +15,7 @@ const props = defineProps<Props>();
 
 const storage = useStorage();
 
-const onDeleteProfileClick = (profile: Layout) => {
+const onDeleteProfileClick = (profile: Profile) => {
     deleteProfile(profile.uuid, storage);
 };
 </script>
@@ -30,7 +30,7 @@ const onDeleteProfileClick = (profile: Layout) => {
           variant="elevated" color="gray" class="profile-chip">
             <v-btn
                 color="white"
-                :to="{ name: RouteName.LAYOUT, params: { profileUuid: profile.uuid }}">
+                :to="{ name: RouteName.PROFILE, params: { profileUuid: profile.uuid }}">
                 Profile: {{  profile.name }}
             </v-btn>
             <v-btn

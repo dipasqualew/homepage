@@ -3,7 +3,7 @@ import { onBeforeMount, ref } from 'vue';
 
 import ContainerRoot from '../components/ContainerRoot.vue';
 import { useMeta, useStorage } from '../hooks';
-import { Layout, loadProfile } from '../profiles';
+import { Profile, loadProfile } from '../profiles';
 
 interface Props {
     profileUuid?: string | null;
@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
     profileUuid: null,
 });
 
-const profile = ref<Layout | null>(null);
+const profile = ref<Profile | null>(null);
 
 
 onBeforeMount(() => {
@@ -26,9 +26,9 @@ onBeforeMount(() => {
         }
 
         profile.value = loadProfile(props.profileUuid, storage);
-        meta.title.value = `Layout Profile: ${profile.value?.name ?? '404'}`;
+        meta.title.value = `Profile Profile: ${profile.value?.name ?? '404'}`;
     } catch (error) {
-        meta.title.value = 'Layout Profile: 404';
+        meta.title.value = 'Profile Profile: 404';
         return;
     }
 });
@@ -37,7 +37,7 @@ onBeforeMount(() => {
 
 <template>
     <div class="fullpage" v-if="profile">
-        <ContainerRoot :layout="profile" />
+        <ContainerRoot :profile="profile" />
     </div>
-    <div v-else class="text-h3 text-center pt-5">Layout Profile not found!</div>
+    <div v-else class="text-h3 text-center pt-5">Profile Profile not found!</div>
 </template>

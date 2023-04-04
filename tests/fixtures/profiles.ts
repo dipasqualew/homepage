@@ -1,8 +1,8 @@
-import { Favourite, Layout } from '../../src/profiles';
+import { Bookmark, Profile } from '../../src/profiles';
 
 export type BookmarkKeys = 'gmail' | 'gdrive' | 'gcalendar' | 'chatgpt' | 'onepassword';
 
-export const BOOKMARKS: Record<BookmarkKeys, Favourite> = {
+export const BOOKMARKS: Record<BookmarkKeys, Bookmark> = {
     gmail: {
         label: 'gmail',
         icon: 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg',
@@ -60,9 +60,9 @@ export const BOOKMARKS: Record<BookmarkKeys, Favourite> = {
     }
 };
 
-export const BAD_LAYOUT = 'bad-layout';
+export const BAD_PROFILE = 'bad-profile';
 
-export const PROFILE_EMPTY: Layout = {
+export const PROFILE_EMPTY: Profile = {
     uuid: 'b450bcb0-03f6-4d61-b732-b1917849a795',
     name: 'Empty Profile',
     root: {
@@ -73,7 +73,7 @@ export const PROFILE_EMPTY: Layout = {
     }
 };
 
-export const PROFILE_SIMPLE: Layout = {
+export const PROFILE_SIMPLE: Profile = {
     uuid: '49195e73-defe-46fb-a2a7-34f9595d0899',
     name: 'Simple Profile',
     root: {
@@ -84,13 +84,13 @@ export const PROFILE_SIMPLE: Layout = {
             {
                 uuid: 'fe1114a7-c78e-4f96-a776-5412714c7b9d',
                 type: 'big-card',
-                favourite: BOOKMARKS.chatgpt
+                Bookmark: BOOKMARKS.chatgpt
             }
         ]
     },
 };
 
-export const PROFILE_DEFAULT: Layout = {
+export const PROFILE_DEFAULT: Profile = {
     uuid: 'b3c7ada7-dd26-4521-87f4-5fe5f6b11c46',
     name: 'Default Profile',
     root: {
@@ -111,7 +111,7 @@ export const PROFILE_DEFAULT: Layout = {
                             {
                                 uuid: 'd2666124-820a-4325-a4be-e0eaf48cfddb',
                                 type: 'big-card',
-                                favourite: BOOKMARKS.gmail
+                                Bookmark: BOOKMARKS.gmail
                             }
                         ]
                     },
@@ -123,7 +123,7 @@ export const PROFILE_DEFAULT: Layout = {
                             {
                                 uuid: 'bba07d7a-cba9-45c1-a1ea-801a1a1a5169',
                                 type: 'big-card',
-                                favourite: BOOKMARKS.gdrive
+                                Bookmark: BOOKMARKS.gdrive
                             }
                         ]
                     },
@@ -135,7 +135,7 @@ export const PROFILE_DEFAULT: Layout = {
                             {
                                 uuid: '53467b43-5220-4609-b3b5-33c50d0afc7f',
                                 type: 'big-card',
-                                favourite: BOOKMARKS.gcalendar
+                                Bookmark: BOOKMARKS.gcalendar
                             }
                         ]
                     }
@@ -149,7 +149,7 @@ export const PROFILE_DEFAULT: Layout = {
                     {
                         uuid: 'fe1114a7-c78e-4f96-a776-5412714c7b9d',
                         type: 'big-card',
-                        favourite: BOOKMARKS.chatgpt
+                        Bookmark: BOOKMARKS.chatgpt
                     }
                 ]
             },
@@ -161,7 +161,7 @@ export const PROFILE_DEFAULT: Layout = {
                     {
                         uuid: '590fafc8-21e8-4e75-aebb-07e4dc8706fa',
                         type: 'big-card',
-                        favourite: BOOKMARKS.onepassword
+                        Bookmark: BOOKMARKS.onepassword
                     }
                 ]
             }

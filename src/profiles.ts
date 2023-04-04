@@ -1,16 +1,16 @@
 import { RemovableRef, StorageLike, useStorage } from '@vueuse/core';
 import { v4 as uuidv4 } from 'uuid';
 
-export interface FavouriteRow {
+export interface BookmarkRow {
     title?: string;
     url: string;
     default?: boolean;
 }
 
-export interface Favourite {
+export interface Bookmark {
     label: string;
     icon: string;
-    rows: FavouriteRow[];
+    rows: BookmarkRow[];
 }
 
 export interface Block {
@@ -23,7 +23,7 @@ export type BlockOptions = BigCardBlock | Container;
 
 export interface BigCardBlock extends Block {
     type: 'big-card';
-    favourite: Favourite;
+    Bookmark: Bookmark;
 }
 
 export interface Container extends Block {
@@ -33,27 +33,27 @@ export interface Container extends Block {
 }
 
 
-export interface Layout {
+export interface Profile {
   uuid: string;
   name: string;
   root: Container;
 }
 
-export type LayoutProfilesMap = Record<string, Layout | undefined>;
+export type ProfilesMap = Record<string, Profile | undefined>;
 
-export const getLayoutProfiles = (storage: StorageLike ): RemovableRef<LayoutProfilesMap> => {
-    const layoutProfilesKey = 'layout-profiles';
+export const getProfiles = (storage: StorageLike ): RemovableRef<ProfilesMap> => {
+    const profilesKey = 'layout-profiles';
 
     const options = { mergeDefaults: true };
-    const profileDefaults: LayoutProfilesMap  = {};
+    const profileDefaults: ProfilesMap  = {};
 
-    const layoutProfiles = useStorage(layoutProfilesKey, profileDefaults, storage, options);
+    const profiles = useStorage(profilesKey, profileDefaults, storage, options);
 
-    return layoutProfiles;
+    return profiles;
 };
 
-export const createProfile = (props: { name?: string, root?: Container, uuid?: string | null }): Layout => {
-    const profile: Layout = {
+export const createProfile = (props: { name?: string, root?: Container, uuid?: string | null }): Profile => {
+    const profile: Profile = {
         uuid: props.uuid || uuidv4(),
         name: props.name || '',
         root: props.root || {
@@ -67,14 +67,14 @@ export const createProfile = (props: { name?: string, root?: Container, uuid?: s
     return profile;
 };
 
-export const saveProfile = (profile: Layout, storage: StorageLike): void => {
-    const profiles = getLayoutProfiles(storage);
+export const saveProfile = (profile: Profile, storage: StorageLike): void => {
+    const profiles = getProfiles(storage);
 
     profiles.value[profile.uuid] = profile;
 };
 
-export const loadProfile = (profileUuid: string, storage: StorageLike): Layout => {
-    const profiles = getLayoutProfiles(storage);
+export const loadProfile = (profileUuid: string, storage: StorageLike): Profile => {
+    const profiles = getProfiles(storage);
 
     const profile = profiles.value[profileUuid];
 
@@ -86,7 +86,7 @@ export const loadProfile = (profileUuid: string, storage: StorageLike): Layout =
 };
 
 export const deleteProfile = (profileUuid: string, storage: StorageLike): void => {
-    const profiles = getLayoutProfiles(storage);
+    const profiles = getProfiles(storage);
 
     delete profiles.value[profileUuid];
 };

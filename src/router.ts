@@ -2,14 +2,14 @@ import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
 
 
 const EditorView = () => import('./views/EditorView.vue');
-const LayoutView = () => import('./views/LayoutView.vue');
+const ProfileView = () => import('./views/ProfileView.vue');
 
 /**
  * All route names in the application.
  */
 export enum RouteName {
-    LAYOUT__EMPTY = 'LAYOUT__EMPTY',
-    LAYOUT = 'LAYOUT',
+    PROFILE__EMPTY = 'PROFILE__EMPTY',
+    PROFILE = 'PROFILE',
     PROFILE_EDITOR__NEW = 'PROFILE_EDITOR__NEW',
     PROFILE_EDITOR__EXISTING = 'PROFILE_EDITOR__EXISTING',
   }
@@ -32,16 +32,16 @@ export type NamedRoutes = {
   };
 
 export const namedRoutes: NamedRoutes = {
-    [RouteName.LAYOUT__EMPTY]: {
-        path: '/layout',
-        name: RouteName.LAYOUT__EMPTY,
-        component: LayoutView,
+    [RouteName.PROFILE__EMPTY]: {
+        path: '/profile',
+        name: RouteName.PROFILE__EMPTY,
+        component: ProfileView,
         props: true,
     },
-    [RouteName.LAYOUT]:  {
-        path: '/layout/:profileUuid',
-        name: RouteName.LAYOUT,
-        component: LayoutView,
+    [RouteName.PROFILE]:  {
+        path: '/profile/:profileUuid',
+        name: RouteName.PROFILE,
+        component: ProfileView,
         props: true,
     },
     [RouteName.PROFILE_EDITOR__NEW]: {

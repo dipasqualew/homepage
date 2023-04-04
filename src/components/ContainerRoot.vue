@@ -4,14 +4,14 @@ import { ref } from 'vue';
 
 import ContainerChild from './ContainerChild.vue';
 import RenderForm from './RenderForm.vue';
-import { BlockOptions, Container, Favourite, Layout } from '../profiles';
+import { BlockOptions, Bookmark, Container, Profile } from '../profiles';
 
 
 const emit = defineEmits(['updateProfile']);
 
 
 interface Props {
-    layout: Layout;
+    profile: Profile;
     editMode?: boolean;
 }
 
@@ -43,7 +43,7 @@ const onClick = (event: Event) => {
         event.stopPropagation();
         const itemUuid = getItemUuid(event.target as HTMLElement);
 
-        const match = getContainerByUuid(props.layout.root, itemUuid);
+        const match = getContainerByUuid(props.profile.root, itemUuid);
 
         dialog.value = {
             active: true,
@@ -84,9 +84,9 @@ const getContainerByUuid = (parent: Container, uuid: string): { parent: Containe
 };
 
 
-const onProfileAction = (context: { action: string, bookmark: Favourite }) => {
+const onProfileAction = (context: { action: string, bookmark: Bookmark }) => {
     dialog.value.active = false;
-    const target = getContainerByUuid(props.layout.root, dialog.value.itemUuid);
+    const target = getContainerByUuid(props.profile.root, dialog.value.itemUuid);
 
     if (!target.container) {
         throw new Error('Target not found');
@@ -98,7 +98,7 @@ const onProfileAction = (context: { action: string, bookmark: Favourite }) => {
         }
 
         if (context.action === 'edit-bookmark') {
-            target.container.favourite = context.bookmark;
+            target.container.Bookmark = context.bookmark;
         }
 
         if (context.action === 'remove-bookmark') {
@@ -138,13 +138,13 @@ const onProfileAction = (context: { action: string, bookmark: Favourite }) => {
             target.container.children.push({
                 uuid: uuidv4(),
                 type: 'big-card',
-                favourite: context.bookmark,
+                Bookmark: context.bookmark,
             });
         }
     }
 
 
-    emit('updateProfile', props.layout);
+    emit('updateProfile', props.profile);
 };
 
 const onClose = () => {
@@ -156,14 +156,14 @@ const onClose = () => {
 </script>
 <template>
     <div
-        data-testid="layout-visual-editor"
-        :data-item-uuid="props.layout.uuid"
+        data-testid="profile-visual-editor"
+        :data-item-uuid="props.profile.uuid"
         @click="onClick"
         @mouseover="onHover"
         @mouseleave="currentUuid = ''"
-        class="layout">
+        class="profile">
         <ContainerChild
-            :container="props.layout.root"
+            :container="props.profile.root"
             :current-uuid="currentUuid"
             :edit-mode="editMode"
         />
@@ -178,12 +178,12 @@ const onClose = () => {
 </template>
 
 <style scoped>
-.layout {
+.profile {
     width: 100%;
     height: 100%;
 }
 
-.layout > div {
+.profile > div {
     height: 100%;
 }
 </style>

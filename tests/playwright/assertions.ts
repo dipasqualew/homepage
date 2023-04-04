@@ -1,6 +1,6 @@
 import { Locator, expect } from '@playwright/test';
 
-export const assertDefaultLayout = async (locator: Locator) => {
+export const assertDefaultProfile = async (locator: Locator) => {
     await expect(locator).toContainText('gmail:home');
     await expect(locator).toContainText('gmail:work');
     await expect(locator).toContainText('gdrive');

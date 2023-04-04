@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed, onBeforeMount, ref } from 'vue';
 
-import { BigCardBlock, Container, Favourite } from '../profiles';
+import { BigCardBlock, Bookmark, Container } from '../profiles';
 
 const emit = defineEmits(['profileAction', 'close']);
 
 const props = defineProps<{ container: Container | BigCardBlock | null }>();
 const action = ref('');
 
-const bookmark = ref<Favourite>({
+const bookmark = ref<Bookmark>({
     label: '',
     icon: '',
     rows: [
@@ -58,7 +58,7 @@ const ACTION_REMOVE_BOOKMARK = {
 onBeforeMount(() => {
     if (props.container?.type === 'big-card') {
         // populate bookmar.value with a deep clone of the given bookmark
-        bookmark.value = JSON.parse(JSON.stringify(props.container.favourite));
+        bookmark.value = JSON.parse(JSON.stringify(props.container.Bookmark));
     }
 });
 
@@ -101,7 +101,7 @@ const removeRow = (index: number) => {
             <v-col>
                 <v-select
                     label="Select Action"
-                    data-testid="layout-select-action"
+                    data-testid="profile-select-action"
                     :items="actions"
                     v-model="action"
                     ></v-select>

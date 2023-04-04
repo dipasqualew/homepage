@@ -1,15 +1,15 @@
 import { Locator, Page } from 'playwright';
 
 import { BasePOM } from './BasePOM.js';
-import { Favourite, Layout } from '../../../src/profiles.js';
+import { Bookmark, Profile } from '../../../src/profiles.js';
 
-export class LayoutBuilder extends BasePOM {
+export class ProfileBuilder extends BasePOM {
     get profileNameInput(): Locator {
         return this.page.getByLabel('Profile Name');
     }
 
     get codeEditor(): Locator {
-        return this.page.getByLabel('Layout Code');
+        return this.page.getByLabel('Profile Code');
     }
 
     get commitButton(): Locator {
@@ -17,15 +17,15 @@ export class LayoutBuilder extends BasePOM {
     }
 
     get visualEditor(): Locator {
-        return this.page.getByTestId('layout-visual-editor');
+        return this.page.getByTestId('profile-visual-editor');
     }
 
-    async getProfileValue(): Promise<Layout> {
-        const layoutRaw = await this.codeEditor.inputValue();
-        return JSON.parse(layoutRaw) as Layout;
+    async getProfileValue(): Promise<Profile> {
+        const profileRaw = await this.codeEditor.inputValue();
+        return JSON.parse(profileRaw) as Profile;
     }
 
-    async fillProfile(profile: Layout): Promise<void> {
+    async fillProfile(profile: Profile): Promise<void> {
         await this.profileNameInput.fill(profile.name);
         await this.codeEditor.fill(JSON.stringify(profile, null, 2));
     }
@@ -47,7 +47,7 @@ export class LayoutBuilder extends BasePOM {
         const child = await this.getChild(childUuid);
         await child.click({ position: { x: 5, y: 5 } });
 
-        await this.selectOption('layout-select-action', action);
+        await this.selectOption('profile-select-action', action);
 
         if (additionalSteps) {
             await additionalSteps(this.page);
@@ -64,7 +64,7 @@ export class LayoutBuilder extends BasePOM {
 
     async addBookmarkOnContainer(
         containerUuid: string,
-        bookmark: Favourite,
+        bookmark: Bookmark,
         confirm = true,
     ): Promise<void> {
         await this.performActionOnChild(containerUuid, 'Add bookmark', confirm, async (page) => {
