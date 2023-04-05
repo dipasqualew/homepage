@@ -45,24 +45,29 @@ const getCheckRunAnnotations = async (checkRunId: number) => {
   return annotations.data;
 };
 
-const getMainBuildSize = async () => {
-  return null;
-  // const { build } = await getMainCheckRuns();
+const getMainBuildSize = async (): Promise<string | null> => {
+  const { build } = await getMainCheckRuns();
 
-  // if (!build) {
-  //   // No build check run found means we are running on main
-  //   return null;
-  // }
+  if (!build) {
+    // No build check run found means we are running on main
+    return null;
+  }
 
-  // const annotations = await getCheckRunAnnotations(build.id);
+  const annotations = await getCheckRunAnnotations(build.id);
 
-  // const buildSizeAnnotation = annotations.find((annotation) => annotation.title === 'Build Size');
+  const buildSizeAnnotation = annotations.find((annotation) => annotation.title === 'Build Size');
 
-  // if (!buildSizeAnnotation) {
-  //   throw new Error('Could not find the Build Size annotation.')
-  // }
+  if (!buildSizeAnnotation) {
+    throw new Error('Could not find the Build Size annotation.')
+  }
 
-  // return buildSizeAnnotation.message?.match(/(\d+)/)?.[1];
+  const buildSize = buildSizeAnnotation.message?.match(/(\d+)/)?.[1];
+
+  if (!buildSize) {
+    throw new Error('Could not find the build size in the annotation message.')
+  }
+
+  return buildSize;
 };
 
 const main = async () => {

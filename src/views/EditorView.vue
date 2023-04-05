@@ -96,7 +96,7 @@ onBeforeMount(() => {
             </v-row>
             <v-row>
                 <v-col>
-                    <div v-if="parsedProfile" class="visual-editor">
+                    <div v-if="parsedProfile" class="visual-editor" data-testid="visual-editor">
                         <ContainerRoot :profile="parsedProfile" :edit-mode="true" @update-profile="updateProfile" />
                     </div>
                     <div v-else>

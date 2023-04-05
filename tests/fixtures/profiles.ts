@@ -22,6 +22,7 @@ export const BOOKMARKS: Record<BookmarkKeys, Bookmark> = {
         icon: 'https://upload.wikimedia.org/wikipedia/commons/d/da/Google_Drive_logo.png',
         rows: [
             {
+                title: 'home',
                 url: 'https://drive.google.com/drive/my-drive',
             }
         ]
@@ -31,6 +32,7 @@ export const BOOKMARKS: Record<BookmarkKeys, Bookmark> = {
         icon: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg',
         rows: [
             {
+                title: 'home',
                 url: 'https://calendar.google.com/calendar/u/0/r',
             }
         ]
@@ -54,7 +56,12 @@ export const BOOKMARKS: Record<BookmarkKeys, Bookmark> = {
         icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/1Password_icon.png/240px-1Password_icon.png',
         rows: [
             {
-                url: 'https://1password.com',
+                title: 'home',
+                url: 'https://my.1password.com',
+            },
+            {
+                title: 'work',
+                url: 'https://test-work-company-nope.1password.com',
             }
         ]
     }
@@ -167,4 +174,10 @@ export const PROFILE_DEFAULT: Profile = {
             }
         ]
     }
+};
+
+export const PROFILES = {
+    PROFILE_EMPTY,
+    PROFILE_SIMPLE,
+    PROFILE_DEFAULT,
 };

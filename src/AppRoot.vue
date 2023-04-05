@@ -24,7 +24,7 @@ const meta = useMeta();
   <UserFeedback />
   <div class="root">
     <PageToolbar :allProfiles="allProfiles" :meta="meta" />
-    <router-view class="router-view" />
+    <router-view class="router-view" data-testid="router-view" />
   </div>
 </template>
 
